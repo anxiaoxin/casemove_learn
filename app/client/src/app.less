@@ -1,0 +1,122 @@
+/*Copyright @ 2022 Lenovo. All rights reserved*/
+/*Confidential and Proprietary*/
+@fontColor: rgba(0, 0, 0, 0.65);
+#root,
+html,
+body {
+  height: 100%;
+  font-family: 'MicrosoftYaHei', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  color: @fontColor;
+}
+
+.ant-layout {
+  display: flex;
+  width: 100%;
+  min-height: 100%;
+}
+
+.ant-table-tbody {
+  color: @fontColor;
+}
+
+.ant-badge-status .ant-badge-status-text {
+  color: @fontColor;
+}
+
+.checkbox-item .ant-checkbox-indeterminate .ant-checkbox-inner {
+  background-color: #1890ff;
+  border: none;
+}
+
+.checkbox-item .ant-checkbox-indeterminate .ant-checkbox-inner::after {
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 2px;
+  background-color: white;
+  border: 0;
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  content: ' ';
+}
+
+.ant-menu-inline
+  > .ant-menu-submenu.ant-menu-submenu-inline
+  .ant-menu-submenu-title {
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.ant-menu-inline.ant-menu-root .ant-menu-item.ant-menu-item {
+  transition: none;
+}
+
+.ant-menu-submenu .ant-menu-sub.ant-menu-inline {
+  background-color: #f1f5f9;
+}
+
+.ant-menu.ant-menu-sub.ant-menu-inline > li {
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+}
+
+.ant-table-body::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.ant-table-body:hover::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.ant-table-body:hover::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.45);
+  background-color: rgba(0, 0, 0, 0.45);
+}
+
+.ant-layout-sider-children .ant-menu-vertical {
+  // background: url('./assets/images/bgimg@2x.png') no-repeat fixed bottom left;
+  // background-size: 280px 280px;
+}
+
+.ant-layout-sider-children > .ant-menu {
+  // background: url('./assets/images/bgimg@2x.png') no-repeat fixed bottom left;
+  // background-size: 280px 280px;
+}
+.ant-table-thead > tr > th {
+  background: #ffffff !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15) !important;
+}
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  margin: 4px 0 !important;
+}
+.ant-table-cell-scrollbar:not([rowspan]) {
+  box-shadow: 0 0 0 0 #ffffff !important;
+}
+.ant-table-body {
+  min-height: calc(100vh - 292px) !important;
+}
+.ant-table-cell {
+  min-height: calc(100vh - 292px) !important;
+}
+// .ant-table-tbody > tr.ant-table-row:hover > td, .ant-table-tbody > tr > td.ant-table-cell-row-hover{
+//   background-color: #ffffff !important;
+// }
+// :deep(.ant-table-tbody .ant-table-row:nth-child(2n)) {//隔行变灰
+
+//   background: #F2F4F7;
+
+//   .ant-table-cell-fix-left,.ant-table-cell-fix-right{//隔行固定的变灰
+
+//     background:#F2F4F7;
+
+//   }
+
+//  }
