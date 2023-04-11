@@ -1,11 +1,15 @@
-import { UserLogin } from "@/request";
+import React from 'react';
+import { RefresInventory, UserLogin } from "@/request";
 import { Form, Button, Input } from "antd-mobile";
 
 const Login = () => {
   const onFinish = (values:any) => {
     console.log(values);
-    UserLogin(values).then(data => {
+    UserLogin(values).then((data: any) => {
       console.log(111, data);
+      RefresInventory({}).then(data => {
+
+      })
     })
   }
 
@@ -45,3 +49,4 @@ const Login = () => {
 }
 
 export default Login;
+

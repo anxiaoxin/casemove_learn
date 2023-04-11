@@ -1,94 +1,196 @@
-<!-- Copyright @ 2022 Lenovo. All rights reserved
-Confidential and Proprietary -->
-# superadmin-web
+
+<br/>
+<br/>
+<br/>
+<br/>
+<p align="center">
+  <a href='https://umijs.org/zh-CN/'>
+    <img src='https://user-images.githubusercontent.com/12181423/150708308-e0ca55ed-1bda-4db6-9e69-f34dbc27c01d.png' width='80' />
+  </a>
+  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+  <a href='https://mobile.ant.design/zh'>
+    <img src='https://gw.alipayobjects.com/zos/bmw-prod/b2c7ff8b-eba0-4af9-9dd5-0b5b17f42c57.svg' width='105'/>
+  </a>
+</p>
+<p align="center" height='100'>
+  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+  <a href='https://umijs.org/zh-CN/'>
+    <strong>UmiJS</strong>
+  </a>
+  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+  <a href='https://mobile.ant.design/zh'>
+     <strong>Ant Design Mobile</strong>
+  </a>
+</p>
+<br/>
+<br/>
+<br/>
+<br/>
 
 
+# umi-antd-mobile 移动应用
 
-## Getting started
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+[![Build With Umi](https://img.shields.io/badge/build%20with-umi-028fe4.svg?style=flat-square)](https://umijs.org/zh-CN)
+[![Build With antd-mobile](https://img.shields.io/badge/build-antd--mobile-green.svg)](https://mobile.ant.design)
+[![GitHub license](https://img.shields.io/github/license/hqwlkj/umi-antd-mobile)](https://github.com/hqwlkj/umi-antd-mobile)
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
 
-## Add your files
+<br/>
+<br/>
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## **文档和框架都在逐步进行完善中**
+
+# 快速上手
+
+## 环境准备
+
+首先得有 [node](https://nodejs.org/en/)，并确保 node 版本是 10.13 或以上。（mac 下推荐使用 [nvm](https://github.com/creationix/nvm) 来管理 node 版本）
+
+```bash
+$ node -v
+v10.13.0
+```
+
+推荐使用 yarn 管理 npm 依赖，并[使用国内源](https://github.com/yiminghe/tyarn)（阿里用户使用内网源）。
+
+```bash
+
+# 国内源
+$ npm i yarn tyarn -g
+
+# 后面文档里的 yarn 换成 tyarn
+$ tyarn -v
+
+# 阿里内网源
+$ tnpm i yarn @ali/yarn -g
+
+# 后面文档里的 yarn 换成 ayarn
+$ ayarn -v
+```
+
+
+## 开始使用
+
+clone项目
+
+```bash
+$ git clone --depth=1 https://github.com/hqwlkj/umi-antd-mobile.git my-project
+
+$ cd my-project
+```
+
+安装项目依赖
+
+```bash
+$ yarn
+```
+
+本地启动
+
+```bash
+$ yarn start
+```
+
+## 部署发布
+
+### 构建
+
+```bash
+$ yarn build
+
+✔ Webpack
+  Compiled successfully in 17.17s
+
+ DONE  Compiled successfully in 17167ms                                       8:26:25 PM
+
+Build success.
+✨  Done in 20.79s.
+```
+
+构建产物默认生成到 `./dist` 下，然后通过 tree 命令查看，
+
+```bash
+tree ./dist
+
+./dist
+├── index.html
+├── umi.css
+└── umi.js
+```
+
+### 本地验证
+
+发布之前，可以通过 `serve` 做本地验证，
+
+```bash
+$ yarn global add serve
+$ serve ./dist
+
+   ┌────────────────────────────────────────────────────┐
+   │                                                    │
+   │   Serving!                                         │
+   │                                                    │
+   │   - Local:            http://localhost:5000        │
+   │   - On Your Network:  http://192.168.12.34:5000    │
+   │                                                    │
+   │   Copied local address to clipboard!               │
+   │                                                    │
+   └────────────────────────────────────────────────────┘
+```
+
+访问 [http://localhost:5000](http://localhost:5000)，正常情况下应该是和执行 `yarn start` 时是一致的。
+
+### 部署
+
+本地验证完，就可以部署了。你需要把 `dist` 目录部署到服务器上。
+
+更多关于 **umijs** 的相关配置，请查阅 [umijs官方文档](https://umijs.org/zh-CN/config)
+
+更多关于 **antd-mobile** 的相关组件使用说明，请查阅 [Ant Design Mobile官方文档](https://mobile.ant.design/zh/components/button)
+
+
+## 预览效果图
+
+<img src="https://user-images.githubusercontent.com/12181423/150905972-d8bd4608-d86b-4bcc-98bc-ca42e2f91146.png" width="200" />&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/12181423/151107456-cf3ca33f-f2ee-4fb4-9f04-1426b729dba7.png" width="200" />&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/12181423/151107542-24f5c943-2af2-4e20-91ef-fb18d9aadbf7.png" width="200" />&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/12181423/150569860-2f288815-75b8-4cd9-abae-ee90f310826f.png" width="200" />&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/12181423/150569985-360f6b7e-0805-49e0-89fa-724307140bb5.png" width="200" />
+
+目前还是一个测试demo，所以图片就是一个截屏图，大家先将就看看 😂😂😂
+
+## 内置 Layout
+
+在 `src/layouts`中配置了两个常用的 `layout` 组件。
+
+>1、`tab-bar` layout 主要用于根据配置的 `routes` 动态生成带有 Tabbar 的页面(如示例效果图)；同时可以根据浏览器地址栏的地址选择对于的 TabItem;
+
+>2、<del> `basic` layout 主要用于普通的路由使用；目前没有做过多的封装；</del>
+
+**这里的layout需要重新在构思一下；也希望社区能提供更好的建议**
+
+
+## FAQ
+ >1. 如何更换自动生成的 `TabBar` 图标？
+ 
+```text
+由于 `umijs` 的路由配置中没有支持 icon 属性可以为一个图标，所以需要自己进行处理，处理的方式如下：
+
+在配置 `routes` 时，将`icon`设置为 `antd-mobile-icons` 中的图标名称；
+然后在 `src/layouts/tab-bar/index.tsx` 中的 `renderTabItemIcon` 函数中对应进行修改。
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.xpaas.lenovo.com/lr/pcie/cloud-pc/superadmin-web.git
-git branch -M master
-git push -uf origin master
-```
 
-## Integrate with your tools
+ >2. 整理中 😄😄
 
-- [ ] [Set up project integrations](http://gitlab.xpaas.lenovo.com/lr/pcie/cloud-pc/superadmin-web/-/settings/integrations)
 
-## Collaborate with your team
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+## 参与贡献
 
-## Test and Deploy
+我们非常欢迎你的贡献，你可以通过以下方式和我一起共建 :smiley:：
 
-Use the built-in continuous integration in GitLab.
+- 通过 [Issue](https://github.com/hqwlkj/umi-antd-mobile/issues) 报告 bug 或进行咨询。
+- 提交 [Pull Request](https://github.com/hqwlkj/umi-antd-mobile/pulls) 改进代码。
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
 
-***
 
-# Editing this README
+## LICENSE
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+[MIT](https://github.com/hqwlkj/umi-antd-mobile/blob/master/LICENSE.md)

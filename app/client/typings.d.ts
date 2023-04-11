@@ -1,5 +1,3 @@
-/**Copyright @ 2022 Lenovo. All rights reserved*/
-/**Confidential and Proprietary*/
 declare module '*.css';
 declare module '*.less';
 declare module '*.png';
@@ -9,7 +7,4 @@ declare module '*.svg' {
   ): React.ReactElement;
   const url: string;
   export default url;
-}
-declare interface Window {
-  chrome: any;
 }

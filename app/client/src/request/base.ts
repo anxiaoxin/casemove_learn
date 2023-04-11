@@ -6,16 +6,11 @@ import { Modal } from 'antd';
 import axsio from 'axios';
 import qs from 'qs';
 import Cookies from 'js-cookie';
-import { adLoginUrl } from '@/constants/urls';
 
 interface ResponseType {
   message: string;
   result: any;
   status: number;
-}
-
-if (Config.currentEnv !== 'dev') {
-  window.document.domain = Config.domain;
 }
 
 const IconAuth = {
@@ -24,11 +19,11 @@ const IconAuth = {
 };
 
 const http = axsio.create({
-  baseURL: Config.baseUrl,
+  baseURL: 'localhost:3001/',
   timeout: 15000,
 });
 
-http.interceptors.request.use((config) => {
+http.interceptors.request.use((config: any) => {
   return {
     ...config,
     paramsSerializer: (params: any) => {
@@ -43,8 +38,7 @@ http.interceptors.request.use((config) => {
       // 'X-Token':'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2NvdW50SWQiOiJ6aGFuZ2NoYW80MSIsImZpcnN0TmFtZSI6IkNoYW8iLCJsYXN0TmFtZSI6IlpoYW5nIiwiZG9tYWluVHlwZSI6ImFkZnMtYWRtaW4iLCJkaXNwbGF5TmFtZSI6IkNoYW8gQ2hhbzQxIFpoYW5nIiwiZXhwIjoxNjc2NDQxNDU4LCJpYXQiOjE2NzYzNTUwNTgsImVtYWlsIjoiemhhbmdjaGFvNDFAbGVub3ZvLmNvbSJ9.hFvN7QJeg7HseMXpHn0E0pFULSrdLP8GvL4ARPuOgO8',
       'X-Token': Cookies.get('X-Token'),
     },
-    baseURL:
-      config.url?.indexOf('dtaas') === -1 ? config.baseURL : Config.iconUrl,
+    baseURL: 'http://localhost:3001',
     auth: config.url?.indexOf('dtaas') === -1 ? '' : IconAuth,
   };
 });
@@ -81,10 +75,6 @@ http.interceptors.response.use(
     Modal.destroyAll();
     switch (response?.status) {
       case 401:
-        return;
-        window.location.replace(
-          Config.baseUrl + adLoginUrl + `?issuerValue=${Config.issuerValue}`,
-        );
         break;
       case 404:
         return Promise.resolve();

@@ -447,8 +447,8 @@ ipcMain.on(
                       }
                       ClassLoginResponse.setResponseStatus('loggedIn');
                       ClassLoginResponse.setPackage(returnPackage);
-                      sendLoginReply(event);
                     });
+                    sendLoginReply(event);
                 });
             }
           });
