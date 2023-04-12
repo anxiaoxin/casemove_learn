@@ -162,7 +162,7 @@ class runItems {
     }
   }
   async handleItem(itemRow) {
-    let returnRows = [] as any;
+    let returnRows = [];
     itemRow.forEach((element) => {
       if (element.item_name !== undefined && element.item_moveable == true) {
         this.makeSinglerequest(element).then((returnValue) => {
@@ -174,7 +174,7 @@ class runItems {
   }
 
   async handleTradeUp(itemRow) {
-    let returnRows = [] as any;
+    let returnRows = [];
     itemRow.forEach((element) => {
       this.makeSinglerequest(element).then((returnValue) => {
         returnRows.push(returnValue);

@@ -1,6 +1,7 @@
 var express = require('express');
 const SteamCtrl = require('../api/steamCtrl');
 const { sendSuccess } = require('../utils/util');
+const { getPrices } = require('../global/price');
 var router = express.Router();
 
 let steamCtrl;
@@ -25,6 +26,11 @@ router.post('/login', async function(req, res, next){
 router.post('/refreshInventory', function(req, res, next) {
   steamCtrl.refreshInventory();
   res.send('respond with a resource');
+})
+
+router.get('/getPrice', async function(req, res, next) {
+  const data = await getPrices();
+  sendSuccess(res, data);
 })
 
 module.exports = router;

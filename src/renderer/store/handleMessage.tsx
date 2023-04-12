@@ -16,7 +16,7 @@ export async function handleUserEvent(message, settings) {
     const description = message[1]
     switch (statusCode) {
         case 1:
-            const subMessage = message[2]
+            const subMessage = message[2];
             return setInventoryAction({inventory: subMessage[1], combinedInventory: await combineInventory(subMessage[1], settings)})
 
         case 2:

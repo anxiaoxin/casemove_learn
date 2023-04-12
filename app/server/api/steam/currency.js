@@ -88,5 +88,4 @@ class currency {
 module.exports = {
   currency
 };
-export { currency };
 

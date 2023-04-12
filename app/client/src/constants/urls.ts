@@ -2,3 +2,4 @@
 /**Confidential and Proprietary*/
 export const loginUrl = '/login';
 export const refreshInventoryUrl = '/refreshInventory';
+export const getPriceUrl = '/getPrice';

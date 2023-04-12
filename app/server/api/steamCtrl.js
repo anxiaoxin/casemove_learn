@@ -5,12 +5,20 @@ const GlobalOffensive = require('globaloffensive');
 const { fetchItems } = require('./steam/items/getCommands');
 const { tradeUps } = require('./steam/tradeup');
 const { currencyCodes } = require('../const');
+const { currency: CurrencyClass } = require('../api/steam/currency');
 
 class SteamCtrl {
     sUser;
     csgo;
     fetchItemClass = new fetchItems();
     tradeUpClass = new tradeUps();
+
+    static getCurrency = (currency) => {
+      const currencyClass  = new CurrencyClass();
+      currencyClass.getRate(currency).then((res) => {
+
+      })
+    }
 
     constructor() {
         this.sUser = new SteamUser();
@@ -24,7 +32,6 @@ class SteamCtrl {
             this.sUser.once('accountInfo', (displayName) => {
                 console.log('displayName', displayName);
                 this.csgoStart(displayName);
-                this.logonRes.res(displayName);
             })
         });
         this.sUser.once('loginKey', function(key) {
@@ -168,18 +175,19 @@ class SteamCtrl {
                       walletToSend: walletToSend,
                     };
                     console.log('returnPackage', returnPackage);
+                    this.logonRes.res(returnPackage)
                     // startEvents(csgo, user);
                   });
+              }).catch(e => {
+                this.logonRes.rej();
               });
           }
         });
       }
 
       const startGameCoordinator = async () => {
-        // user.setPersona(SteamUser.EPersonaState.Online);
 
         setTimeout(() => {
-          // user.setPersona(SteamUser.EPersonaState.Online);
           this.sUser.gamesPlayed([730], true);
         }, 3000);
       }
@@ -219,40 +227,42 @@ class SteamCtrl {
         console.log(222223333, value);
         if (value == 'error') {
           // Force login
-          ipcMain.on('forceLogin', async () => {
-            console.log('forceLogin');
-            setTimeout(() => {
-              // user.setPersona(SteamUser.EPersonaState.Online);
-              gameCoordinate();
-              user.gamesPlayed([730], true);
-            }, 3000);
+          // ipcMain.on('forceLogin', async () => {
+          //   console.log('forceLogin');
+          //   setTimeout(() => {
+          //     // user.setPersona(SteamUser.EPersonaState.Online);
+          //     gameCoordinate();
+          //     user.gamesPlayed([730], true);
+          //   }, 3000);
 
-            ipcMain.removeAllListeners('forceLogin');
-            ipcMain.removeAllListeners('signOut');
-          });
-          ipcMain.on('signOut', async () => {
-            console.log('Sign out');
-            user.logOff();
-            ipcMain.removeAllListeners('forceLogin');
-            ipcMain.removeAllListeners('signOut');
-          });
+          //   ipcMain.removeAllListeners('forceLogin');
+          //   ipcMain.removeAllListeners('signOut');
+          // });
+          // ipcMain.on('signOut', async () => {
+          //   console.log('Sign out');
+          //   user.logOff();
+          //   ipcMain.removeAllListeners('forceLogin');
+          //   ipcMain.removeAllListeners('signOut');
+          // });
+          this.logonRes.rej();
         }
         if (value == 'time') {
           console.log(
             'GC didnt start in time, adding CSGO to the library and retrying.'
           );
-          this.sUser.requestFreeLicense([730], function (err, packageIds, appIds) {
-            if (err) {
-              console.log(err);
-              // ClassLoginResponse.setEmptyPackage();
-              // ClassLoginResponse.setResponseStatus('playingElsewhere');
-              // sendLoginReply(event);
-            }
-            console.log('Granted package: ', packageIds);
-            console.log('Granted App: ', appIds);
-            startGameCoordinator();
+          this.logonRes.rej();
+          // this.sUser.requestFreeLicense([730], function (err, packageIds, appIds) {
+          //   if (err) {
+          //     console.log(err);
+          //     // ClassLoginResponse.setEmptyPackage();
+          //     // ClassLoginResponse.setResponseStatus('playingElsewhere');
+          //     // sendLoginReply(event);
+          //   }
+          //   console.log('Granted package: ', packageIds);
+          //   console.log('Granted App: ', appIds);
+          //   startGameCoordinator();
 
-          });
+          // });
         }
       });
     }
