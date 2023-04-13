@@ -5,8 +5,8 @@ import 'antd/dist/antd.less';
 import { plugin } from './core/plugin';
 import './core/pluginRegister';
 import { createHistory } from './core/history';
-import { ApplyPluginsType } from '/mnt/d/work/tmp/casemove_learn/app/web/node_modules/@umijs/runtime';
-import { renderClient } from '/mnt/d/work/tmp/casemove_learn/app/web/node_modules/@umijs/renderer-react/dist/index.js';
+import { ApplyPluginsType } from 'F:/linux/casemove_learn/app/client/node_modules/@umijs/runtime';
+import { renderClient } from 'F:/linux/casemove_learn/app/client/node_modules/@umijs/renderer-react/dist/index.js';
 import { getRoutes } from './core/routes';
 
 
@@ -24,9 +24,8 @@ const getClientRender = (args: { hot?: boolean; routes?: any[] } = {}) => plugin
         plugin,
         history: createHistory(args.hot),
         isServer: process.env.__IS_SERVER,
-        dynamicImport: true,
         rootElement: 'root',
-        defaultTitle: `umi-antd-mobile`,
+        defaultTitle: ``,
       },
     });
     return renderClient(opts);

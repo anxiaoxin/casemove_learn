@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useState, useEffect, useContext, useRef } from 'react';
 // @ts-ignore
-import isEqual from '/mnt/d/work/tmp/casemove_learn/app/web/node_modules/fast-deep-equal/index.js';
+import isEqual from 'F:/linux/casemove_learn/app/client/node_modules/fast-deep-equal/index.js';
 // @ts-ignore
 import { UmiContext } from './helpers/constant';
 import { Model, models } from './Provider';

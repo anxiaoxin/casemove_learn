@@ -1,79 +1,70 @@
 // @ts-nocheck
 import React from 'react';
-import { ApplyPluginsType, dynamic } from '/mnt/d/work/tmp/casemove_learn/app/web/node_modules/@umijs/runtime';
+import { ApplyPluginsType } from 'F:/linux/casemove_learn/app/client/node_modules/@umijs/runtime';
 import * as umiExports from './umiExports';
 import { plugin } from './plugin';
-import LoadingComponent from '@/pages/loading';
 
 export function getRoutes() {
   const routes = [
   {
-    "exact": true,
     "path": "/",
-    "redirect": "/tabBar/index"
-  },
-  {
-    "path": "/",
-    "component": dynamic({ loader: () => import(/* webpackChunkName: 'layouts__index' */'@/layouts/index'), loading: LoadingComponent}),
+    "component": require('@/layouts/index.tsx').default,
     "routes": [
       {
-        "path": "/tabBar/index",
-        "title": "首页",
-        "icon": "AlipayCircleFill",
-        "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__home__index' */'@/pages/home/index'), loading: LoadingComponent}),
-        "exact": true
+        "path": "/404",
+        "exact": true,
+        "component": require('@/pages/404.tsx').default
       },
       {
-        "path": "/tabBar/todo",
-        "title": "我的待办",
-        "badgeKey": "todoBadge",
-        "icon": "UnorderedListOutline",
-        "wrappers": [dynamic({ loader: () => import(/* webpackChunkName: 'wrappers' */'@/authority/index'), loading: LoadingComponent})],
-        "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__todo__index' */'@/pages/todo/index'), loading: LoadingComponent}),
-        "exact": true
+        "path": "/account",
+        "exact": true,
+        "component": require('@/pages/account/index.tsx').default
       },
       {
-        "path": "/tabBar/message",
-        "title": "我的消息",
-        "icon": "MessageOutline",
-        "badgeKey": "messageBadge",
-        "wrappers": [dynamic({ loader: () => import(/* webpackChunkName: 'wrappers' */'@/authority/index'), loading: LoadingComponent})],
-        "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__message__index' */'@/pages/message/index'), loading: LoadingComponent}),
-        "exact": true
+        "path": "/details",
+        "exact": true,
+        "component": require('@/pages/details/index.tsx').default
       },
       {
-        "path": "/tabBar/personalCenter",
-        "title": "个人中心",
-        "icon": "UserOutline",
-        "wrappers": [dynamic({ loader: () => import(/* webpackChunkName: 'wrappers' */'@/authority/index'), loading: LoadingComponent})],
-        "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__account__index' */'@/pages/account/index'), loading: LoadingComponent}),
-        "exact": true
+        "path": "/home",
+        "exact": true,
+        "component": require('@/pages/home/index.tsx').default
       },
       {
-        "path": "/detail",
-        "title": "详情页",
-        "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__details__index' */'@/pages/details/index'), loading: LoadingComponent}),
-        "exact": true
+        "path": "/loading",
+        "exact": true,
+        "component": require('@/pages/loading.tsx').default
       },
       {
         "path": "/login",
-        "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__login__index' */'@/pages/login/index'), loading: LoadingComponent}),
-        "exact": true
+        "exact": true,
+        "component": require('@/pages/login/index.tsx').default
+      },
+      {
+        "path": "/message",
+        "exact": true,
+        "component": require('@/pages/message/index.tsx').default
       },
       {
         "path": "/moveout",
-        "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__moveout__index' */'@/pages/moveout/index'), loading: LoadingComponent}),
-        "exact": true
+        "exact": true,
+        "component": require('@/pages/moveout/index.tsx').default
       },
       {
-        "path": "/*",
-        "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__404' */'@/pages/404'), loading: LoadingComponent}),
-        "exact": true
+        "path": "/moveout/items",
+        "exact": true,
+        "component": require('@/pages/moveout/items.tsx').default
       },
       {
-        "path": "/**/*",
-        "redirect": "/404",
-        "exact": true
+        "path": "/todo",
+        "exact": true,
+        "component": require('@/pages/todo/index.tsx').default,
+        "title": "TOTO",
+        "icon": "toto-icon",
+        "badge": "5"
+      },
+      {
+        "component": require('@/pages/404.tsx').default
       }
     ]
   }

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import initialState from '/mnt/d/work/tmp/casemove_learn/app/web/src/.umi/plugin-initial-state/models/initialState';
+import initialState from 'F:/linux/casemove_learn/app/client/src/.umi/plugin-initial-state/models/initialState';
 
 // @ts-ignore
 import Dispatcher from './helpers/dispatcher';

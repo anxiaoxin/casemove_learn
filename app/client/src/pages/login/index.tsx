@@ -6,6 +6,10 @@ import {  ConvertPrices } from '../../../api/prices';
 import { getAccounts } from '../../../api/index';
 import combineInventory from '../../../api/filters/inventoryFunctions';
 import ResData from './res.json';
+import SteamLogo from '../../../assets/images/logo_steam.svg';
+import './index.less';
+import Loading from '@/components/loading/loding';
+
 // import prices from '../../../api/prices';
 
 const filterData = async (data: any) => {
@@ -51,37 +55,53 @@ const Login = () => {
   }, [])
   // return <></>
   return <>
-    <Form
-    layout='horizontal'
-    onFinish={onFinish}
-    footer={
-      <Button block type='submit' color='primary' size='large'>
-        登录
-      </Button>
-      }
-    >
-      <Form.Item
-        name='accountName'
-        label='姓名'
-        rules={[{ required: true, message: '姓名不能为空' }]}
-      >
-        <Input placeholder='请输入姓名' value='listen_tiana' />
-      </Form.Item>
-      <Form.Item
-        name='password'
-        label='密码'
-        rules={[{ required: true, message: '姓名不能为空' }]}
-      >
-        <Input placeholder='请输入姓名' type='password' value='li@980828298' />
-      </Form.Item>
-      <Form.Item
-        name='twoFactorCode'
-        label='令牌'
-        rules={[{ required: true, message: '姓名不能为空' }]}
-      >
-        <Input placeholder='请输入姓名' />
-      </Form.Item>
-    </Form>
+    <div className='container'>
+      <div className='app-logo-container'>
+         CSGO TOOLS
+      </div>
+
+      <div className='login-card'>
+        <div className='login-logo-container'>
+          <img width={180} src={SteamLogo} alt="" />
+          Connect to Steam
+        </div>
+        <Form
+        layout='vertical'
+        onFinish={onFinish}
+        mode='card'
+        footer={
+          <Button block type='submit'  
+            style={{backgroundColor: 'rgb(79, 70, 225)', color: 'white', borderColor: 'rgb(79, 70, 225)'}} 
+            size='large'>
+            登录
+          </Button>
+          }
+        >
+          <Form.Item
+            name='accountName'
+            label='Steam用户名'
+            rules={[{ required: true, message: '用户名不能为空' }]}
+          >
+            <Input placeholder='请输入用户名' />
+          </Form.Item>
+          <Form.Item
+            name='password'
+            label='Steam密码'
+            rules={[{ required: true, message: '密码不能为空' }]}
+          >
+            <Input placeholder='请输入密码' type='password' />
+          </Form.Item>
+          <Form.Item
+            name='twoFactorCode'
+            label='令牌'
+            rules={[{ required: true, message: '请输入令牌' }]}
+          >
+            <Input placeholder='请输入令牌' />
+          </Form.Item>
+        </Form>
+      </div>
+    </div>
+    <Loading></Loading>
   </>;
 }
 
