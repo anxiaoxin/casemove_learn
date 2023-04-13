@@ -46,7 +46,7 @@ async function getCategory(toLoopThrough: Array<ItemRow | ItemRowStorage>, addit
 }
 
 // This will combine the inventory when specific conditions match
-export default function combineInventory(thisInventory: Array<ItemRow | ItemRowStorage>, settings: any, additionalObjectToAdd: any = {}) {
+ const combineInventory = (thisInventory: Array<ItemRow | ItemRowStorage>, settings: any, additionalObjectToAdd: any = {}) => {
 
   const seenProducts = [] as any;
   const newInventory = [] as any;
@@ -112,7 +112,6 @@ export default function combineInventory(thisInventory: Array<ItemRow | ItemRowS
     return returnValue
   })
 }
-
 export async function filterInventoryd(
   combinedInventory: any,
   filtersData: any,
@@ -352,12 +351,12 @@ export async function sortDataFunction(
   }
 }
 
-export function sortDataFunctionTwo(
+export const sortDataFunctionTwo = (
   sortValue: any,
   inventory: any,
   prices: any,
   pricingSource: any
-) {
+) => {
   function sortRun(valueOne: any, ValueTwo: any, useNaN = false) {
     if (valueOne == undefined) {
       valueOne = -90000000000
@@ -494,3 +493,5 @@ export function sortDataFunctionTwo(
       return inventory;
   }
 }
+
+export default combineInventory;

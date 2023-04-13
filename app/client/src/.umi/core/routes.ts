@@ -61,6 +61,11 @@ export function getRoutes() {
         "exact": true
       },
       {
+        "path": "/moveout",
+        "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__moveout__index' */'@/pages/moveout/index'), loading: LoadingComponent}),
+        "exact": true
+      },
+      {
         "path": "/*",
         "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__404' */'@/pages/404'), loading: LoadingComponent}),
         "exact": true

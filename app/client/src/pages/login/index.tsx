@@ -6,7 +6,7 @@ import {  ConvertPrices } from '../../../api/prices';
 import { getAccounts } from '../../../api/index';
 import combineInventory from '../../../api/filters/inventoryFunctions';
 import ResData from './res.json';
-import prices from '../../../api/prices';
+// import prices from '../../../api/prices';
 
 const filterData = async (data: any) => {
   console.log(data);
@@ -35,7 +35,7 @@ const filterData = async (data: any) => {
 }
 
 const Login = () => {
-  console.log(prices.loading);
+  // console.log(prices.loading);
   const onFinish = (values:any) => {
     console.log(values);
     UserLogin(values).then((data: any) => {
@@ -47,9 +47,9 @@ const Login = () => {
   }
 
   useEffect(() => {
-    filterData(ResData);
+    // filterData(ResData);
   }, [])
-  return <></>
+  // return <></>
   return <>
     <Form
     layout='horizontal'

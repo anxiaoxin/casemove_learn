@@ -12,7 +12,6 @@ router.get('/', function(req, res, next) {
 
 router.post('/login', async function(req, res, next){
   steamCtrl = new SteamCtrl();
-  console.log(11111, req.body);
   let data;
   try {
     data = await steamCtrl.login('guard', req.body);
@@ -32,5 +31,28 @@ router.get('/getPrice', async function(req, res, next) {
   const data = await getPrices();
   sendSuccess(res, data);
 })
+
+router.get('/getCasketContents', async function(req, res, next) {
+  console.log(req.query);
+  const { id } = req.query;
+  const data = await steamCtrl.getCasketContents(id);
+  console.log('res', data);
+  sendSuccess(res, data);
+})
+
+router.post('/moveOut', async function(req, res, next) {
+  const { casketId, itemId } = req.body;
+  const data = await steamCtrl.moveOut(id);
+  console.log('res', data);
+  sendSuccess(res, data);
+})
+
+router.post('/moveIn', async function(req, res, next) {
+  const { casketId, itemId } = req.body;
+  const data = await steamCtrl.moveIn(id);
+  console.log('res', data);
+  sendSuccess(res, data);
+})
+
 
 module.exports = router;

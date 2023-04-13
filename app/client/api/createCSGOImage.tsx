@@ -1,10 +1,10 @@
 import axios from "axios";
 
-export function createCSGOImage ( urlEndpath : string ) : string {
+export const createCSGOImage = ( urlEndpath : string ) : string => {
   return 'https://images.skinledger.com/counterstrike/' + urlEndpath + '.png'
 }
 
-export async function getURL(steamID: string): Promise<string | void> {
+export const getURL = async (steamID: string): Promise<string | void> => {
   let defaultReturnString = createCSGOImage("econ/characters/customplayer_tm_separatist")
     return new Promise<string>((resolve) => {
        axios

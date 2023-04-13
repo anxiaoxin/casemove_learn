@@ -266,6 +266,63 @@ class SteamCtrl {
         }
       });
     }
+
+    async getCasketContents(casketID) {
+      return new Promise((res, rej) => {
+        this.csgo.getCasketContents(casketID, async (err, items) => {
+          this.fetchItemClass.convertStorageData(items).then((returnValue) => {
+            this.tradeUpClass.getTradeUp(returnValue).then((newReturnValue) => {
+              console.log('Casket contains: ', newReturnValue.length);
+              res(newReturnValue);
+            });
+          });
+        })
+      })
+    }
+
+    // Remove items from storage unit
+    moveOut(casketId, itemId, fastMode = false) {
+      return new Promise((res, rej) => {
+        // 操作的时候将监听事件移除
+        removeInventoryListeners();
+        this.csgo.removeFromCasket(casketId, itemId);
+        // 如果是fastmode 则不监听该结果
+        if (fastMode == false) {
+          this.csgo.once(
+            'itemCustomizationNotification',
+            (itemIds, notificationType) => {
+              if (
+                notificationType ==
+                GlobalOffensive.ItemCustomizationNotification.CasketRemoved
+              ) {
+                console.log(itemIds + ' got an item removed from it');
+                event.reply('removeFromStorageUnit-reply', [1, itemIds[0]]);
+              }
+            }
+          );
+        }
+      })
+    }
+
+    moveIn(casketId, itemId, fastMode = false) {
+      return new Promise((res, resj) => {
+        this.csgo.addToCasket(casketId, itemId);
+        removeInventoryListeners();
+        if (fastMode == false) {
+          this.csgo.once(
+            'itemCustomizationNotification',
+            (itemIds, notificationType) => {
+              if (
+                notificationType ==
+                GlobalOffensive.ItemCustomizationNotification.CasketAdded
+              ) {
+                res();
+              }
+            }
+          );
+        }
+      });
+    }
 }
 
 module.exports = SteamCtrl;
