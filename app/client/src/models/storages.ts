@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useModel } from "umi"
 
 const getCaskets = (inventory: any)=> {
-    return inventory.csgoInventory.filter(function (row: any) {
+    return inventory?.csgoInventory.filter(function (row: any) {
       if (!row.item_url.includes('casket')) {
         return false; // skip
       }

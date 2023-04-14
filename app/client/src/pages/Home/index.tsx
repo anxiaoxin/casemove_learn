@@ -4,18 +4,6 @@ import { useModel } from "umi";
 import { Switch } from "antd-mobile";
 import './index.less';
 
-const getCaskets = (inventory: any)=> {
-    return inventory.csgoInventory.filter(function (row: any) {
-      if (!row.item_url.includes('casket')) {
-        return false; // skip
-      }
-      if (row.item_storage_total == 0) {
-        return false; // skip
-      }
-      return true;
-    })
-}
-
 const Home = () => {
   const { userInfo, login } = useModel('user');
   const [switchChecked, setSwitchChecked ] = useState(false);
@@ -26,7 +14,9 @@ const Home = () => {
 
   useEffect(() => {
     if (switchChecked) {
-      const cackets = getCaskets(userInfo.inventory);
+
+    } else {
+
     }
   }, [switchChecked])
 
