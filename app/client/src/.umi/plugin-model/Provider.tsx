@@ -1,7 +1,8 @@
 // @ts-nocheck
 import React from 'react';
-import initialState from 'F:/linux/casemove_learn/app/client/src/.umi/plugin-initial-state/models/initialState';
-
+import initialState from '/mnt/d/work/tmp/casemove_learn/app/client/src/.umi/plugin-initial-state/models/initialState';
+import model0 from "/mnt/d/work/tmp/casemove_learn/app/client/src/models/storages";
+import model1 from "/mnt/d/work/tmp/casemove_learn/app/client/src/models/user";
 // @ts-ignore
 import Dispatcher from './helpers/dispatcher';
 // @ts-ignore
@@ -9,7 +10,7 @@ import Executor from './helpers/executor';
 // @ts-ignore
 import { UmiContext } from './helpers/constant';
 
-export const models = { '@@initialState': initialState,  };
+export const models = { '@@initialState': initialState, 'user': model1, 'storages': model0 };
 
 export type Model<T extends keyof typeof models> = {
   [key in keyof typeof models]: ReturnType<typeof models[T]>;

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { ApplyPluginsType } from 'F:/linux/casemove_learn/app/client/node_modules/@umijs/runtime';
+import { ApplyPluginsType } from '/mnt/d/work/tmp/casemove_learn/app/client/node_modules/@umijs/runtime';
 import * as umiExports from './umiExports';
 import { plugin } from './plugin';
 
@@ -29,6 +29,11 @@ export function getRoutes() {
         "path": "/home",
         "exact": true,
         "component": require('@/pages/home/index.tsx').default
+      },
+      {
+        "path": "/home/index_tmp",
+        "exact": true,
+        "component": require('@/pages/home/index_tmp.tsx').default
       },
       {
         "path": "/loading",

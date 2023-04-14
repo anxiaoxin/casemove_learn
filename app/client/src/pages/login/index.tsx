@@ -1,59 +1,24 @@
 import React, { useEffect } from 'react';
-import { RefresInventory, UserLogin } from "@/request";
 import { Form, Button, Input } from "antd-mobile";
-import { getProfilePicture } from '../../../api/createCSGOImage';
-import {  ConvertPrices } from '../../../api/prices';
-import { getAccounts } from '../../../api/index';
-import combineInventory from '../../../api/filters/inventoryFunctions';
-import ResData from './res.json';
 import SteamLogo from '../../../assets/images/logo_steam.svg';
-import './index.less';
 import Loading from '@/components/loading/loding';
-
-// import prices from '../../../api/prices';
-
-const filterData = async (data: any) => {
-  console.log(data);
-  // const picture = await getProfilePicture(data.steamID);
-  let combinedInventory  = await combineInventory(data.csgoInventory, {});
-  let accounts = getAccounts(data.csgoInventory);
-  console.log(combinedInventory, accounts);
-
-  // // Inventory prices
-  // const PricingClass = new ConvertPrices(settingsData, currentState.pricingReducer)
-  // let inventoryValue = 0
-  // inventory.combinedInventory.forEach(element => {
-  //   const itemPrice = PricingClass.getPrice(element)
-  //   if (!isNaN(itemPrice)) {
-  //     inventoryValue += itemPrice * element.combined_QTY
-  //   }
-  // });
-
-  // let storageUnitsValue = 0
-  // inventory.storageInventory.forEach(element => {
-  //   const itemPrice = PricingClass.getPrice(element)
-  //   if (!isNaN(itemPrice)) {
-  //     storageUnitsValue += itemPrice * element.combined_QTY
-  //   }
-  // });
-}
+import { history, useModel } from 'umi';
+import { PathName } from '@/constants';
+import './index.less';
 
 const Login = () => {
-  // console.log(prices.loading);
-  const onFinish = (values:any) => {
-    console.log(values);
-    UserLogin(values).then((data: any) => {
-      filterData(data.data);
-      // RefresInventory({}).then(data => {
-      //   console.log(data);
-      // })
-    })
-  }
+  const { haslogin, userInfo, login, logging } = useModel('user');
 
   useEffect(() => {
-    // filterData(ResData);
-  }, [])
-  // return <></>
+    if (haslogin) {
+      history.push(PathName.home);
+    }
+  }, [haslogin])
+
+  const onFinish = (values:any) => {
+    login(values);
+  }
+
   return <>
     <div className='container'>
       <div className='app-logo-container'>
@@ -70,8 +35,8 @@ const Login = () => {
         onFinish={onFinish}
         mode='card'
         footer={
-          <Button block type='submit'  
-            style={{backgroundColor: 'rgb(79, 70, 225)', color: 'white', borderColor: 'rgb(79, 70, 225)'}} 
+          <Button block type='submit'
+            style={{backgroundColor: 'rgb(79, 70, 225)', color: 'white', borderColor: 'rgb(79, 70, 225)'}}
             size='large'>
             登录
           </Button>
@@ -101,7 +66,7 @@ const Login = () => {
         </Form>
       </div>
     </div>
-    <Loading></Loading>
+    {logging && <Loading></Loading>}
   </>;
 }
 

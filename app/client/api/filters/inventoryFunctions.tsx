@@ -46,7 +46,7 @@ async function getCategory(toLoopThrough: Array<ItemRow | ItemRowStorage>, addit
 }
 
 // This will combine the inventory when specific conditions match
- const combineInventory = (thisInventory: Array<ItemRow | ItemRowStorage>, settings: any, additionalObjectToAdd: any = {}) => {
+ const combineInventory = (thisInventory: Array<ItemRow | ItemRowStorage>, settings: {ignoreUnlock?: boolean, ignoreCustomname?: boolean}, additionalObjectToAdd: any = {}) => {
 
   const seenProducts = [] as any;
   const newInventory = [] as any;
@@ -58,9 +58,7 @@ async function getCategory(toLoopThrough: Array<ItemRow | ItemRowStorage>, addit
     let wearName = valued['item_wear_name']  || 0
     let valueConditions =
       valued['item_name'] +
-      valued['item_customname'] +
       valued['item_url'] +
-      valued['trade_unlock'] +
       valued['item_moveable'] +
       valued['item_has_stickers'] +
       wearName +
@@ -70,15 +68,21 @@ async function getCategory(toLoopThrough: Array<ItemRow | ItemRowStorage>, addit
     //   valueConditions = valueConditions + valued['item_paint_wear'];
     // }
 
+    if (!settings.ignoreUnlock) {
+      valueConditions += valued['trade_unlock'];
+    }
+
+    if (!settings.ignoreCustomname) {
+      valueConditions += valued['item_customname'];
+    }
+
     // Filter the inventory
     if (seenProducts.includes(valueConditions) == false) {
       let length = thisInventory.filter(function (item: any) {
         let wearName = item['item_wear_name']  || 0
         let itemConditions =
           item['item_name'] +
-          item['item_customname'] +
           item['item_url'] +
-          item['trade_unlock'] +
           item['item_moveable'] +
           item['item_has_stickers'] +
           wearName +
@@ -86,6 +90,14 @@ async function getCategory(toLoopThrough: Array<ItemRow | ItemRowStorage>, addit
         // if (item['item_paint_wear'] != undefined && settings.columns.includes('Float')) {
         //   itemConditions = itemConditions + item['item_paint_wear'];
         // }
+
+        if (!settings.ignoreUnlock) {
+          itemConditions += item['trade_unlock'];
+        }
+
+        if (!settings.ignoreCustomname) {
+          itemConditions += item['item_customname'];
+        }
 
         return itemConditions == valueConditions;
       });
@@ -112,6 +124,7 @@ async function getCategory(toLoopThrough: Array<ItemRow | ItemRowStorage>, addit
     return returnValue
   })
 }
+
 export async function filterInventoryd(
   combinedInventory: any,
   filtersData: any,
