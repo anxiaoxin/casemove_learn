@@ -50,6 +50,7 @@ export default [
       { path: '/login', component: '@/pages/login/index' },
       { path: '/moveout', component: '@/pages/moveout/index' },
       { path: '/*', component: '@/pages/404' },
+      { path: '/move', component: '@/pages/move/index' },
       { path: '/**/*', redirect: '/404' },
     ],
   },

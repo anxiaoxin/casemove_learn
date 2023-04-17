@@ -42,12 +42,25 @@ class SteamCtrl {
         this.sUser.once('steamGuard', (domain, callback, lastCodeWrong) => {
             console.log('steamGuard', lastCodeWrong);
         })
+
+        this.sUser.once('error', (error) => {
+          console.log('Error login: ', error);
+          if (error == 'Error: LoggedInElsewhere') {
+            // ClassLoginResponse.setEmptyPackage()
+            // ClassLoginResponse.setResponseStatus('playingElsewhere')
+            // this._returnToSender();
+          } else {
+            // ClassLoginResponse.setEmptyPackage()
+            // ClassLoginResponse.setResponseStatus('defaultError')
+            // this._returnToSender();
+          }
+        });
     }
 
     async login(type , params) {
         switch(type) {
             case 'guard':
-                return await this._loginGuard(params)
+                return this._loginGuard(params)
             default:
                 break;
         }
@@ -55,7 +68,7 @@ class SteamCtrl {
 
     async _loginGuard(params) {
         this.sUser.logOn(params);
-        return await new Promise((res, rej) => {
+        return new Promise((res, rej) => {
           this.logonRes = {res, rej}
         })
     }
@@ -270,6 +283,7 @@ class SteamCtrl {
     async getCasketContents(casketID) {
       return new Promise((res, rej) => {
         this.csgo.getCasketContents(casketID, async (err, items) => {
+          console.log(222333444, items.length);
           this.fetchItemClass.convertStorageData(items).then((returnValue) => {
             this.tradeUpClass.getTradeUp(returnValue).then((newReturnValue) => {
               console.log('Casket contains: ', newReturnValue.length);

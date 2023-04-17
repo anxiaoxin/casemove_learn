@@ -11,13 +11,14 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/login', async function(req, res, next){
+  console.log('start login')
   steamCtrl = new SteamCtrl();
   let data;
   try {
     data = await steamCtrl.login('guard', req.body);
     console.log('data', data);
   } catch (error) {
-
+    console.log('error', error)
   }
   sendSuccess(res, data)
 })

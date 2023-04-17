@@ -131,9 +131,6 @@ class items {
 
     for (const [key, value] of Object.entries(inventoryResult)) {
 
-
-
-
       if (value['def_index'] == undefined) {
         continue;
       }

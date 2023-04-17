@@ -47,11 +47,11 @@ async function getCategory(toLoopThrough: Array<ItemRow | ItemRowStorage>, addit
 
 // This will combine the inventory when specific conditions match
  const combineInventory = (thisInventory: Array<ItemRow | ItemRowStorage>, settings: {ignoreUnlock?: boolean, ignoreCustomname?: boolean}, additionalObjectToAdd: any = {}) => {
-
+  const inventory =[...thisInventory];
   const seenProducts = [] as any;
   const newInventory = [] as any;
 
-  for (const [, value] of Object.entries(thisInventory)) {
+  for (const [, value] of Object.entries(inventory)) {
     let valued: any = value;
 
     // Create a string that matches the conditions
@@ -78,7 +78,7 @@ async function getCategory(toLoopThrough: Array<ItemRow | ItemRowStorage>, addit
 
     // Filter the inventory
     if (seenProducts.includes(valueConditions) == false) {
-      let length = thisInventory.filter(function (item: any) {
+      let length = inventory.filter(function (item: any) {
         let wearName = item['item_wear_name']  || 0
         let itemConditions =
           item['item_name'] +
@@ -110,7 +110,7 @@ async function getCategory(toLoopThrough: Array<ItemRow | ItemRowStorage>, addit
         valuedList.push(filteredValued['item_id']);
       }
 
-      let newDict = length[0];
+      let newDict = {...length[0]};
       newDict['combined_ids'] = valuedList;
       newDict['combined_QTY'] = valuedList.length;
       newInventory.push(newDict);
@@ -505,6 +505,10 @@ export const sortDataFunctionTwo = (
     default:
       return inventory;
   }
+}
+
+export const excludeCasket = (rows: any[] = []) => {
+  return rows.filter(item => !item.item_url?.includes('casket'))
 }
 
 export default combineInventory;

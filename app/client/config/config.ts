@@ -29,8 +29,10 @@ export default defineConfig({
   ],
   extraPostCSSPlugins: [
     require("postcss-px-to-viewport")({
-      viewportWidth: 750,
-      mediaQuery: true
+      // viewportWidth: 750,
+      remUnit: 75,
+      mediaQuery: true,
+      exclude: /node-modules/i
     })
   ],
   metas: [

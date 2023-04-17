@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { createBrowserHistory, History } from '/mnt/d/work/tmp/casemove_learn/app/client/node_modules/@umijs/runtime';
+import { createBrowserHistory, History } from 'F:/linux/casemove_learn/app/client/node_modules/@umijs/runtime';
 
 let options = {
   "basename": "/"

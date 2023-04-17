@@ -4,5 +4,6 @@ import { StringIndexMap } from '@/type';
 
 export const PathName = {
   login: '/login',
-  home: '/home'
+  home: '/home',
+  move: '/move'
 }

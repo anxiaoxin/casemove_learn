@@ -8,18 +8,20 @@ import {
   loginUrl, refreshInventoryUrl,
 } from '@/constants/urls';
 import ContentsJSON from './getCasketContents.json'
+import UserInfo from '../pages/login/res.json';
 
 export const UserLogin = async (params: any): Promise<any> =>
-  Post(loginUrl, params);
+  Promise.resolve(UserInfo);
+  // Post(loginUrl, params);
 
 export const RefresInventory = async (params: any): Promise<any> =>
   Post(refreshInventoryUrl, params);
 
-export const GetPrice =async (params: any): Promise<any> => {
+export const GetPrice =async (params: any): Promise<any> => 
   Get(getPriceUrl, params);
-}
 
-export const GetCasketContents = async (params: any): Promise<any> => {
-  return Promise.resolve(ContentsJSON);
+
+export const GetCasketContents = async (params: any): Promise<any> => 
+  // return Promise.resolve(ContentsJSON);
   Get(getCasketContentsUrl, params);
-}
+

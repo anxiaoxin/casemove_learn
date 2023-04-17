@@ -9,13 +9,14 @@ interface ItemcardProps {
 const ItemCard = (props: ItemcardProps) => {
   const { info } = props;
   const url = createCSGOImage(info.item_url);
-  console.log('info', info);
-
+  console.log('info',info);
   return <>
     <div className="item-card"
     style={{background: `linear-gradient(white 0%, white 30%, ${(categoriesBkRGB as any)[info.category]})`}}
     >
-      <img style={{width: 80}} src={url} alt="" />
+      <div className="item-card-img">
+        <img style={{width: 80}} src={url} alt="" />
+      </div>
       <div className="item-info">
         <span><span className="item-color" style={{backgroundColor: (categoriesRGB as any)[info.category]}}></span> {info.item_name}</span>
         <div>

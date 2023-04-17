@@ -1,0 +1,99 @@
+.move-container {
+    padding: 20px;
+    font-size: 20px;
+}
+
+.move-storage-list {
+    overflow: hidden;
+    overflow-x: scroll;
+    white-space: nowrap;
+    padding: 10px 0;
+    border: 1px solid #eeeeee;
+    border-left: none;
+    border-right: none;
+}
+
+.move-storage-item {
+    border: 1px solid #eeeeee;
+    border-radius: 4%;
+    display: inline-block;
+    margin: 10px;
+    width:  220px;
+
+    &.selected {
+        border: 2px solid rgb(92, 122, 204);
+    }
+
+    & > .move-storage-image {
+        background: url('../../../assets/images/item_bg.png');
+        background-size: cover;
+        padding: 20px 10px;
+        text-align: center;
+
+        & > img {
+            width: 120px;
+        }
+    }
+
+    & > .move-storage-info {
+        padding: 0 10px;
+        & > div {
+            display: flex;
+            justify-content: space-between;
+            margin: 4px 0;
+        }
+
+        & > div:first-child {
+            & > span {
+                color: #1296db;
+            } 
+        }
+        & > .move-storage-number {
+            & > span {
+                color: rgb(5, 179, 5);
+                font-weight: bold;
+            }
+        }
+        & img {
+            width: 24px;
+            height: 24px;
+        }
+    }
+}
+
+.select-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+    font-size: 24px;
+
+    & > .select-row-operate {
+        & > span:first-child {
+            color: rgb(5, 179, 5);
+        }
+
+        & > span {
+            display: inline-block;
+        }
+
+        & > .select-row-all {
+            background-color: rgb(251, 191, 36);
+            padding: 4px 14px;
+            border-radius: 4%;
+        }
+    }
+
+    & img {
+        width: 100px;
+    }
+
+    & .select-row-input {
+        width: 80px;
+        border: 1px solid #cac8c8;
+        padding: 0 8px;
+        margin-left: 30px;
+        margin-right: 20px;
+        border-radius: 4%;
+    }
+
+}

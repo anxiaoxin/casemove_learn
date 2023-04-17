@@ -5,11 +5,10 @@ import { getAccounts } from "../../api";
 import UserInfo from '../pages/login/res.json';
 // import prices from '../../../api/prices';
 
-const filterData = async (data: any) => {
-  console.log(data);
+export const combineData = async (inventory: any) => {
   // const picture = await getProfilePicture(data.steamID);
-  let combinedInventory  = await combineInventory (data.csgoInventory, {ignoreUnlock: true, ignoreCustomname: true});
-  let accounts = getAccounts(data.csgoInventory);
+  let combinedInventory  = await combineInventory (inventory, {ignoreUnlock: true, ignoreCustomname: true});
+  let accounts = getAccounts(inventory);
   return {
     combinedInventory, accounts
   }
@@ -36,18 +35,14 @@ const filterData = async (data: any) => {
 const useUser = () => {
   const [haslogin, setHasLogin] = useState(false);
   const [logging, setLogging] = useState(false);
-  const [userInfo, setUserInfo] = useState({});
+  const [userInfo, setUserInfo] = useState<any>({});
 
   const login = async (params: any) => {
-    const filtedData = await filterData(UserInfo);
-    setUserInfo({...UserInfo, ...filtedData});
-    setHasLogin(true);
-    return ;
     setLogging(true);
     UserLogin(params).then(async (data) => {
       if (data.status === 0) {
-        const filtedData = await filterData(data.data);
-        setUserInfo({...data.data, ...filtedData});
+        const filtedData = await combineData(data.data.csgoInventory);
+        setUserInfo({...data.data, ...filtedData });
         setHasLogin(true);
         setLogging(false);
       }
@@ -55,7 +50,7 @@ const useUser = () => {
       setLogging(false);
     })
   }
-  return {haslogin, userInfo, login};
+  return {haslogin, userInfo, login, logging};
 }
 
 export default useUser;
