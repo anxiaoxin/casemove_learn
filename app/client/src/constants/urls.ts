@@ -4,3 +4,5 @@ export const loginUrl = '/login';
 export const refreshInventoryUrl = '/refreshInventory';
 export const getPriceUrl = '/getPrice';
 export const getCasketContentsUrl = '/getCasketContents';
+export const moveInUrl = '/moveIn';
+export const moveOutUrl = '/moveOut';

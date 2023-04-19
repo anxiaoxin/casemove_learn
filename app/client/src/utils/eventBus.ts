@@ -19,7 +19,7 @@ class EventBus {
     this.eventMap.delete(event);
   }
 
-  emit(event: string, params?: StringIndexMap | string | number) {
+  emit(event: string, params?: StringIndexMap | string | number | boolean) {
     const list = this.eventMap.get(event);
     list?.filter((item) => {
       if (item instanceof Function) {
