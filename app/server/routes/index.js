@@ -43,14 +43,14 @@ router.get('/getCasketContents', async function(req, res, next) {
 
 router.post('/moveOut', async function(req, res, next) {
   const { casketId, itemId } = req.body;
-  const data = await steamCtrl.moveOut(id);
+  const data = await steamCtrl.moveOut(itemId);
   console.log('res', data);
   sendSuccess(res, data);
 })
 
 router.post('/moveIn', async function(req, res, next) {
   const { casketId, itemId } = req.body;
-  const data = await steamCtrl.moveIn(id);
+  const data = await steamCtrl.moveIn(itemId);
   console.log('res', data);
   sendSuccess(res, data);
 })

@@ -24,11 +24,11 @@ const MoveDialog = (props: MoveDialogProps) => {
     console.log('params', params);
     setCount(params.length);
 
-    // MultipleRequest(moveout ? MoveOut : MoveIn, params, (res: any, finish: boolean ) => {
-    //   console.log(res, finish);
-    //   if (!res) setFailCount(failedCount + 1);
-    //   setCount(count - 1);
-    // })
+    MultipleRequest(moveout ? MoveOut : MoveIn, params, (res: any, finish: boolean ) => {
+      console.log(res, finish);
+      if (!res) setFailCount(failedCount + 1);
+      setCount(count - 1);
+    })
   }, [])
 
   useEffect(() => {
@@ -56,7 +56,6 @@ const useMoveDialog = () => {
       content: <MoveDialog idMap={idMap} moveout={moveout}></MoveDialog>,
       closeOnAction: true,
     })
-    setTimeout(hide, 120000);
   }
 
   const hide = () => {

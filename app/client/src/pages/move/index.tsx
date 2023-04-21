@@ -32,6 +32,7 @@ const MoveHeader = (props: MoveHeaderProp) => {
     const { userInfo } = useModel('user');
     const { caskets, casketsInventory, loading, loadCasketsContent } = useModel('storages');
     const [selected, setSelected] = useState<string[]>([]);
+    console.log('casckets', caskets);
 
     const updateSelected = (item: any) => {
         const tmp = [...selected];
@@ -65,6 +66,9 @@ const MoveHeader = (props: MoveHeaderProp) => {
         <div className="move-container">
             <div className="move-storage-list">
                 {caskets.map((item: any) => {
+                    if (moveOut && item.item_storage_total === 0) {
+                      return '';
+                    }
                     return <div className={selected.indexOf(item.item_id) > -1 ? "move-storage-item selected" : 'move-storage-item'}>
                         <div className="move-storage-image" onClick={()=> updateSelected(item)}>
                             <img src={createCSGOImage(item.item_url)} alt="" />
@@ -167,6 +171,7 @@ const Move = () => {
         if (currentTab === 'moveout') {
             const needLoad:string[] = [];
             const items: any[] = [];
+            setRemainingNum(1000 - userInfo.accounts.total)
             selectedCaskets.filter(id => {
                 if (!casketsInventory[id]) {
                     needLoad.push(id);
@@ -195,13 +200,17 @@ const Move = () => {
         setCurrentSelected({...currentSelected, [id]: num});
     }
 
-    useEffect(() => {
+    useChanged(() => {
+      if (!selectedCaskets[0]) return;
       let selectTotal = 0;
       for (let i in currentSelected) {
         selectTotal += currentSelected[i];
       }
-      console.log('number', 1000 - getCasketStorage(selectedCaskets[0], caskets) - selectTotal, currentSelected);
-      setRemainingNum(1000 - getCasketStorage(selectedCaskets[0], caskets) - selectTotal);
+      if (currentTab === 'moveout') {
+        setRemainingNum(1000 - userInfo.accounts.total - selectTotal);
+      } else {
+        setRemainingNum(1000 - getCasketStorage(selectedCaskets[0], caskets) - selectTotal);
+      }
     }, [currentSelected])
 
     const onMove = (moveout: boolean) => {
@@ -210,7 +219,6 @@ const Move = () => {
       }
 
       if (!moveout) {
-        console.log(currentSelected, userInfo.combinedInventory);
         const ids = [];
         for (let id in currentSelected) {
           for (let i = 0; i < userInfo.combinedInventory.length; i++) {
@@ -228,7 +236,7 @@ const Move = () => {
       }
 
     }
-
+    console.log('max', remainingNum);
     return <>
         <Tabs onChange={onTabChange} activeKey={currentTab}>
           <Tabs.Tab title='存入' key='movein'>
@@ -242,7 +250,9 @@ const Move = () => {
           <Tabs.Tab title='取出' key='moveout'>
             <MoveHeader onMove={onMove} onSelected={onSelectChange} moveOut={currentTab === 'moveout'}></MoveHeader>
             <div>
-                {123}
+                {inventorys.map((item: any) => {
+                    return <SelectRow caskets={selectedCaskets} max={remainingNum} data={item} onNumberChange={onNumberChange}></SelectRow>;
+                })}
             </div>
           </Tabs.Tab>
         </Tabs>

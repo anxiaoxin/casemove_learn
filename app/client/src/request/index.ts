@@ -38,8 +38,8 @@ export const MultipleRequest = (request: (params: any) => Promise<any>, paramLis
 }
 
 export const UserLogin = async (params: any): Promise<any> =>
-  Promise.resolve(UserInfo);
-  // Post(loginUrl, params);
+  // Promise.resolve(UserInfo);
+  Post(loginUrl, params);
 
 export const RefresInventory = async (params: any): Promise<any> =>
   Post(refreshInventoryUrl, params);

@@ -8,9 +8,9 @@ const getCaskets = (inventory: any)=> {
       if (!row.item_url.includes('casket')) {
         return false; // skip
       }
-      if (row.item_storage_total == 0) {
-        return false; // skip
-      }
+      // if (row.item_storage_total == 0) {
+      //   return false; // skip
+      // }
       return true;
     })
 }
@@ -27,8 +27,8 @@ const useStorage = () => {
   }, [userInfo])
 
   const loadCasketsContent = async (caskets: any[]) => {
-    setCasketInventory(Haha);
-    return;
+    // setCasketInventory(Haha);
+    // return;
     setLoading(true);
     let contents: any = {}
     try {

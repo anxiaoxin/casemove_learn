@@ -74,7 +74,7 @@ class SteamCtrl {
     }
 
     startChangeEvents() {
-      csgo.on('itemRemoved', (item) => {
+      this.csgo.on('itemRemoved', (item) => {
         console.log('item removed', item);
         if (
           !Object.keys(item).includes('casket_id') &&
@@ -94,7 +94,7 @@ class SteamCtrl {
         }
       });
 
-      csgo.on('itemChanged', (item) => {
+      this.csgo.on('itemChanged', (item) => {
         console.log('item changed', item);
         return;
         fetchItemClass.convertInventory(csgo.inventory).then((returnValue) => {
