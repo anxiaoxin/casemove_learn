@@ -17,25 +17,28 @@ const getCaskets = (inventory: any)=> {
 
 const useStorage = () => {
   const { userInfo } = useModel('user');
-  const [caskets, setCaskets] = useState([]);
+  const [caskets, setCaskets] = useState<any[]>([]);
   const [casketsInventory, setCasketInventory] = useState<any>({});
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!userInfo.steamID) return;
-    setCaskets(getCaskets(userInfo.csgoInventory));
+    const newCaskets = getCaskets(userInfo.csgoInventory);
+    setCaskets(newCaskets);
+    console.log('update caskets', newCaskets);
   }, [userInfo])
 
   const loadCasketsContent = async (caskets: any[]) => {
     // setCasketInventory(Haha);
     // return;
     setLoading(true);
-    let contents: any = {}
+    let contents: any = {...casketsInventory}; 
     try {
       for (let i = 0; i < caskets.length; i ++) {
-        const res = await GetCasketContents({id: caskets[i].item_id});
+        const casketId = caskets[i].item_id;
+        const res = await GetCasketContents({id: casketId});
         if (res.status === 0) {
-          contents[caskets[i].item_id] = res.data;
+          contents[casketId] = res.data.map((item: any) => {item.casket_id = casketId; item.casket_name = caskets[i].item_customname; return item});
         }
       }
       setLoading(false);
@@ -43,6 +46,7 @@ const useStorage = () => {
       setLoading(false);
     }
     setCasketInventory(contents);
+    return contents;
   }
 
   return {caskets, casketsInventory, loading, loadCasketsContent};

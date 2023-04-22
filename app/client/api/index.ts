@@ -5,9 +5,9 @@ export const getAccounts = (inventory: any) => {
     inventory.forEach((element: any) => {
       total += 1
       if (element.item_url == "econ/tools/casket") {
-        total += element.item_storage_total
-        storage += element.item_storage_total
-        storageInventory += 1
+        total += element.item_storage_total;
+        storage += element.item_storage_total;
+        storageInventory += 1;
       }
     });
     return { total, storage, inventory: total - storage, storageInventory};

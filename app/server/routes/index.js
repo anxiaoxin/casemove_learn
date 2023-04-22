@@ -23,9 +23,9 @@ router.post('/login', async function(req, res, next){
   sendSuccess(res, data)
 })
 
-router.post('/refreshInventory', function(req, res, next) {
-  steamCtrl.refreshInventory();
-  res.send('respond with a resource');
+router.post('/refreshInventory', async function(req, res, next) {
+  const data = await steamCtrl.refreshInventory();
+  sendSuccess(res, data);
 })
 
 router.get('/getPrice', async function(req, res, next) {
@@ -43,14 +43,14 @@ router.get('/getCasketContents', async function(req, res, next) {
 
 router.post('/moveOut', async function(req, res, next) {
   const { casketId, itemId } = req.body;
-  const data = await steamCtrl.moveOut(itemId);
+  const data = await steamCtrl.moveOut(casketId ,itemId);
   console.log('res', data);
   sendSuccess(res, data);
 })
 
 router.post('/moveIn', async function(req, res, next) {
   const { casketId, itemId } = req.body;
-  const data = await steamCtrl.moveIn(itemId);
+  const data = await steamCtrl.moveIn(casketId, itemId);
   console.log('res', data);
   sendSuccess(res, data);
 })

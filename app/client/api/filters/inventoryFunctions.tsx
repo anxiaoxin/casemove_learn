@@ -46,7 +46,8 @@ async function getCategory(toLoopThrough: Array<ItemRow | ItemRowStorage>, addit
 }
 
 // This will combine the inventory when specific conditions match
- const combineInventory = (thisInventory: Array<ItemRow | ItemRowStorage>, settings: {ignoreUnlock?: boolean, ignoreCustomname?: boolean}, additionalObjectToAdd: any = {}) => {
+ const combineInventory = (thisInventory: Array<ItemRow | ItemRowStorage>, settings: {ignoreUnlock?: boolean, ignoreCustomname?: boolean, casket?: boolean}, additionalObjectToAdd: any = {}) => {
+  console.log(88888, thisInventory);
   const inventory =[...thisInventory];
   const seenProducts = [] as any;
   const newInventory = [] as any;
@@ -76,6 +77,10 @@ async function getCategory(toLoopThrough: Array<ItemRow | ItemRowStorage>, addit
       valueConditions += valued['item_customname'];
     }
 
+    if (settings.casket) {
+      valueConditions += valued['casket_id'];
+    }
+
     // Filter the inventory
     if (seenProducts.includes(valueConditions) == false) {
       let length = inventory.filter(function (item: any) {
@@ -99,6 +104,10 @@ async function getCategory(toLoopThrough: Array<ItemRow | ItemRowStorage>, addit
           itemConditions += item['item_customname'];
         }
 
+        if (settings.casket) {
+          itemConditions += item['casket_id'];
+        }
+
         return itemConditions == valueConditions;
       });
 
@@ -119,7 +128,7 @@ async function getCategory(toLoopThrough: Array<ItemRow | ItemRowStorage>, addit
       seenProducts.push(valueConditions);
     }
   }
-
+  console.log(4444, newInventory);
   return getCategory(newInventory, additionalObjectToAdd).then((returnValue) => {
     return returnValue
   })

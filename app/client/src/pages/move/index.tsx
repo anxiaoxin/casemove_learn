@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import useChanged from "@/utils/hooks/useChanged";
 import Loading from "../../components/loading/loding";
 import { Input, Tabs } from "antd-mobile";
-import { excludeCasket } from "../../../api/filters/inventoryFunctions";
+import combineInventory, { excludeCasket, sortDataFunctionTwo } from "../../../api/filters/inventoryFunctions";
 import MoveInImage from '../../../assets/images/存入.svg';
 import MoveOutImage from '../../../assets/images/取出.svg';
 import './index.less';
@@ -24,7 +24,8 @@ interface SelectRowProp {
     data: any,
     onNumberChange: (id: string, num: number) => void,
     max: number,
-    caskets: any
+    caskets: any,
+    moveOut?: boolean
 }
 
 const MoveHeader = (props: MoveHeaderProp) => {
@@ -85,7 +86,7 @@ const MoveHeader = (props: MoveHeaderProp) => {
 }
 
 const SelectRow = (props: SelectRowProp) => {
-    const { data, onNumberChange, max, caskets } = props;
+    const { data, onNumberChange, max, caskets, moveOut } = props;
     const [currentNum, setCurrentNum] = useState('0');
     const onInputChange = (value: string) => {
       let res:any = value;
@@ -129,6 +130,10 @@ const SelectRow = (props: SelectRowProp) => {
       setCurrentNum('0');
     }, [caskets])
 
+    useEffect(() => {
+      setCurrentNum('0');
+    }, [data.combined_QTY])
+
     return <>
     <div className="select-row">
         <div>
@@ -136,7 +141,8 @@ const SelectRow = (props: SelectRowProp) => {
             <div>{data.item_name}</div>
         </div>
         <div className="select-row-operate">
-            <span>{data.combined_QTY}</span>
+            {moveOut && <span style={{color: '#1296db'}}>{data.casket_name}</span>}
+            <span style={{color: 'rgb(5, 179, 5)'}}>{data.combined_QTY}</span>
             <span className="select-row-input">
                 <Input type="number" max={data.combined_QTY} onFocus={onFocus} onBlur={onBlur} value={currentNum} onChange={onInputChange} style={{'--font-size': '20'}}></Input>
             </span>
@@ -160,35 +166,49 @@ const Move = () => {
     const [currentTab, setCurrentTab] = useState<string>('movein');
     const [inventorys, setInventorys] = useState<any[]>([]);
     const { caskets, casketsInventory, loading, loadCasketsContent } = useModel('storages');
-    const { userInfo } = useModel('user');
+    const { userInfo, refresh } = useModel('user');
     const [currentSelected, setCurrentSelected] = useState<any[]>([]);
     const [remainingNum, setRemainingNum] = useState<number>(0)
-    const { show } = useMoveDialog();
-
-    const onSelectChange = (ids: string[]) => {
+    const { show, end, setEnd } = useMoveDialog();
+    console.log('casketsInventory', casketsInventory);
+    const onSelectChange = async (ids: string[]) => {
         setSelectedCaskets(ids);
 
         if (currentTab === 'moveout') {
             const needLoad:string[] = [];
             const items: any[] = [];
-            setRemainingNum(1000 - userInfo.accounts.total)
-            selectedCaskets.filter(id => {
+            console.log('total', userInfo.accounts.inventory);
+            setRemainingNum(1000 - userInfo.accounts.inventory);
+            ids.filter(id => {
                 if (!casketsInventory[id]) {
                     needLoad.push(id);
-                } else {
-                    items.push(...casketsInventory[id]);
                 }
             })
+            let casketsData = casketsInventory;
+
             if (needLoad.length) {
-                loadCasketsContent(needLoad);
-            } else {
-                setInventorys(items);
+              casketsData = await loadCasketsContent(needLoad.map(item => {
+                for(let i = 0; i < caskets.length;i++) {
+                  if (caskets[i].item_id === item) {
+                    return caskets[i];
+                  }
+                }
+                return {item_id: item}
+              }));
             }
+
+            ids.filter(id => {
+                if (casketsData[id]) {
+                  items.push(...casketsData[id]);
+                }
+            })
+            const combinedData = await combineInventory(items, {ignoreUnlock: true, ignoreCustomname: true, casket: true});
+            setInventorys(sortDataFunctionTwo('QTY', combinedData, {}, {}));
         }
 
         if (currentTab === 'movein') {
           const id = ids[0];
-         setRemainingNum(1000 - getCasketStorage(id, caskets));
+          setRemainingNum(1000 - getCasketStorage(id, caskets));
         }
     }
 
@@ -203,19 +223,81 @@ const Move = () => {
     useChanged(() => {
       if (!selectedCaskets[0]) return;
       let selectTotal = 0;
+
       for (let i in currentSelected) {
         selectTotal += currentSelected[i];
       }
+
+      console.log('moveout');
       if (currentTab === 'moveout') {
-        setRemainingNum(1000 - userInfo.accounts.total - selectTotal);
+        setRemainingNum(1000 - userInfo.accounts.inventory - selectTotal);
       } else {
         setRemainingNum(1000 - getCasketStorage(selectedCaskets[0], caskets) - selectTotal);
       }
     }, [currentSelected])
 
+    useChanged(() => {
+      setCurrentSelected([]); 
+      setSelectedCaskets([]);
+      setInventorys([]);
+    }, [currentTab])
+
+    const refreshInventory = async () => {
+      const ids = selectedCaskets;
+      if (currentTab === 'moveout') {
+          const needLoad:string[] = [];
+          const items: any[] = [];
+          console.log('total', userInfo.accounts.inventory);
+          setRemainingNum(1000 - userInfo.accounts.inventory);
+          ids.filter(id => {
+              if (!casketsInventory[id]) {
+                  needLoad.push(id);
+              }
+          })
+          let casketsData = casketsInventory;
+
+          if (needLoad.length) {
+            casketsData = await loadCasketsContent(needLoad.map(item => {
+              for(let i = 0; i < caskets.length;i++) {
+                if (caskets[i].item_id === item) {
+                  return caskets[i];
+                }
+              }
+              return {item_id: item}
+            }));
+          }
+
+          ids.filter(id => {
+              if (casketsData[id]) {
+                items.push(...casketsData[id]);
+              }
+          })
+          const combinedData = await combineInventory(items, {ignoreUnlock: true, ignoreCustomname: true, casket: true});
+          setInventorys(sortDataFunctionTwo('QTY', combinedData, {}, {}));
+        }
+    }
+
+    useChanged(() => {
+      refreshInventory();
+    }
+    , [casketsInventory])
+
     const onMove = (moveout: boolean) => {
       if (moveout) {
+        const ids:any = {};
+        for (let id in currentSelected) {
+          for (let i = 0; i < inventorys.length; i++) {
+            if (inventorys[i].item_id === id) {
+              try {
+                ids[inventorys[i].casket_id] = [...inventorys[i].combined_ids.slice(0, currentSelected[id])];
+              } catch (error) {
 
+              }
+            }
+          }
+        }
+        console.log('ids', ids);
+        show(ids, moveout);
       }
 
       if (!moveout) {
@@ -236,7 +318,24 @@ const Move = () => {
       }
 
     }
-    console.log('max', remainingNum);
+
+    useChanged(() => {
+      if (end) {
+        setTimeout(() => {
+          refresh();
+          loadCasketsContent(selectedCaskets.map(item => {
+            for(let i = 0; i < caskets.length;i++) {
+              if (caskets[i].item_id === item) {
+                return caskets[i];
+              }
+            }
+            return {item_id: item}
+          }))
+        }, 800)
+        setEnd(false);
+      }
+    }, [end])
+
     return <>
         <Tabs onChange={onTabChange} activeKey={currentTab}>
           <Tabs.Tab title='存入' key='movein'>
@@ -251,7 +350,7 @@ const Move = () => {
             <MoveHeader onMove={onMove} onSelected={onSelectChange} moveOut={currentTab === 'moveout'}></MoveHeader>
             <div>
                 {inventorys.map((item: any) => {
-                    return <SelectRow caskets={selectedCaskets} max={remainingNum} data={item} onNumberChange={onNumberChange}></SelectRow>;
+                    return <SelectRow caskets={selectedCaskets} max={remainingNum} moveOut={currentTab === 'moveout'} data={item} onNumberChange={onNumberChange}></SelectRow>;
                 })}
             </div>
           </Tabs.Tab>

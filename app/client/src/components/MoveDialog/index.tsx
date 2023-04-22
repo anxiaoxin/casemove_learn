@@ -5,29 +5,32 @@ import './index.less';
 
 interface MoveDialogProps {
   idMap: any[],
-  moveout: boolean
+  moveout: boolean,
+  onEnd: () => void
 }
 
 const MoveDialog = (props: MoveDialogProps) => {
-  const { idMap, moveout } = props;
+  const { idMap, moveout, onEnd } = props;
   const [ count, setCount ] = useState<number>(-1);
-  const [ failedCount, setFailCount ] = useState<number>(0);
+  const [res, setRes] = useState({succedNum: 0, failedNum: 0});
   const [flipClass, setFlipClass] = useState<string>('');
   console.log(idMap);
 
   useEffect(() => {
     const params:any = [];
     for (let id in idMap) {
-      idMap[id].forEach((item: any) => params.push({cascketId: id, itemId: item}));
+      idMap[id].forEach((item: any) => params.push({casketId: id, itemId: item}));
     }
 
     console.log('params', params);
     setCount(params.length);
 
     MultipleRequest(moveout ? MoveOut : MoveIn, params, (res: any, finish: boolean ) => {
-      console.log(res, finish);
-      if (!res) setFailCount(failedCount + 1);
-      setCount(count - 1);
+      setRes(res);
+      console.log('finish', finish);
+      if (finish) {
+        onEnd();
+      }
     })
   }, [])
 
@@ -41,7 +44,7 @@ const MoveDialog = (props: MoveDialogProps) => {
   return <>
     <div>
       <div className={`move-number bg-pan-right ${flipClass}`}>
-        {count}
+        {count - res.succedNum}
       </div>
       <div>
 
@@ -51,9 +54,10 @@ const MoveDialog = (props: MoveDialogProps) => {
 }
 
 const useMoveDialog = () => {
+  const [end, setEnd] = useState(false);
   const show = (idMap: any, moveout: boolean) => {
     Dialog.show({
-      content: <MoveDialog idMap={idMap} moveout={moveout}></MoveDialog>,
+      content: <MoveDialog idMap={idMap} moveout={moveout} onEnd={() => {hide(); setEnd(true)}}></MoveDialog>,
       closeOnAction: true,
     })
   }
@@ -62,7 +66,7 @@ const useMoveDialog = () => {
     Dialog.clear();
   }
 
-  return {show, hide};
+  return {show, hide, end, setEnd};
 }
 
 export default useMoveDialog;

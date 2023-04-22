@@ -152,12 +152,14 @@ class SteamCtrl {
     }
 
     refreshInventory() {
-      this.fetchItemClass.convertInventory(this.csgo.inventory).then((returnValue) => {
-        console.log('returnvalue', returnValue);
-        this.tradeUpClass.getTradeUp(returnValue).then((newReturnValue) => {
-          console.log('item acquired', newReturnValue);
+      return new Promise((res) => {
+        this.fetchItemClass.convertInventory(this.csgo.inventory).then((returnValue) => {
+          console.log('returnvalue', returnValue);
+          this.tradeUpClass.getTradeUp(returnValue).then((newReturnValue) => {
+            res(newReturnValue);
+          });
         });
-      });
+      })
     }
     // 连接上csgo后登录流程才算完成
     csgoStart(displayName) {
@@ -237,7 +239,6 @@ class SteamCtrl {
 
       // Race the two
       Promise.race([timeout, GCResponse, error]).then((value) => {
-        console.log(222223333, value);
         if (value == 'error') {
           // Force login
           // ipcMain.on('forceLogin', async () => {
@@ -283,7 +284,6 @@ class SteamCtrl {
     async getCasketContents(casketID) {
       return new Promise((res, rej) => {
         this.csgo.getCasketContents(casketID, async (err, items) => {
-          console.log(222333444, items.length);
           this.fetchItemClass.convertStorageData(items).then((returnValue) => {
             this.tradeUpClass.getTradeUp(returnValue).then((newReturnValue) => {
               console.log('Casket contains: ', newReturnValue.length);
@@ -298,19 +298,21 @@ class SteamCtrl {
     moveOut(casketId, itemId, fastMode = false) {
       return new Promise((res, rej) => {
         // 操作的时候将监听事件移除
-        removeInventoryListeners();
+        this.removeInventoryListeners();
+        console.log(casketId, itemId);
         this.csgo.removeFromCasket(casketId, itemId);
         // 如果是fastmode 则不监听该结果
         if (fastMode == false) {
           this.csgo.once(
             'itemCustomizationNotification',
             (itemIds, notificationType) => {
+              console.log(itemIds, notificationType);
               if (
                 notificationType ==
                 GlobalOffensive.ItemCustomizationNotification.CasketRemoved
               ) {
                 console.log(itemIds + ' got an item removed from it');
-                event.reply('removeFromStorageUnit-reply', [1, itemIds[0]]);
+                res()
               }
             }
           );
@@ -321,11 +323,13 @@ class SteamCtrl {
     moveIn(casketId, itemId, fastMode = false) {
       return new Promise((res, resj) => {
         this.csgo.addToCasket(casketId, itemId);
-        removeInventoryListeners();
+        console.log('casketId', casketId, itemId);
+        this.removeInventoryListeners();
         if (fastMode == false) {
           this.csgo.once(
             'itemCustomizationNotification',
             (itemIds, notificationType) => {
+              console.log('notification', notificationType, itemIds);
               if (
                 notificationType ==
                 GlobalOffensive.ItemCustomizationNotification.CasketAdded

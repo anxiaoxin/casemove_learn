@@ -13,9 +13,11 @@
     "currency-converter-lt": "^2.0.0-beta.0",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "express-jwt": "^8.4.1",
     "globaloffensive": "^2.3.0",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "jsonwebtoken": "^9.0.0",
     "morgan": "~1.9.1",
     "steam-user": "^4.28.1"
   }

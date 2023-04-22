@@ -20,7 +20,7 @@ const IconAuth = {
 
 const http = axsio.create({
   baseURL: 'localhost:3001/',
-  timeout: 30000,
+  timeout: 300000,
 });
 
 http.interceptors.request.use((config: any) => {

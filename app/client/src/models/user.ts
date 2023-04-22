@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { UserLogin } from "../../src/request";
+import { RefresInventory, UserLogin } from "../../src/request";
 import combineInventory from "../../api/filters/inventoryFunctions";
 import { getAccounts } from "../../api";
 import UserInfo from '../pages/login/res.json';
@@ -50,7 +50,20 @@ const useUser = () => {
       setLogging(false);
     })
   }
-  return {haslogin, userInfo, login, logging};
+
+  const refresh = async () => {
+    setLogging(true);
+    RefresInventory({}).then(async (data) => {
+      if (data.status === 0) {
+        const filtedData = await combineData(data.data);
+        setUserInfo({...userInfo, csgoInventory: data.data, ...filtedData});
+      }
+    }).catch(() => {
+
+    }).finally(() => setLogging(false));
+  }
+
+  return {haslogin, userInfo, login, logging, refresh};
 }
 
 export default useUser;

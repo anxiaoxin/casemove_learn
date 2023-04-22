@@ -14,17 +14,20 @@ import UserInfo from '../pages/login/res.json';
 export const MultipleRequest = (request: (params: any) => Promise<any>, paramList: any[], cb: (res: any, finish: boolean) => any) => {
   let currentReqNum = 5;
   let currentIndex = 0;
+  let finished  = 0;
+  let succedNum = 0;
+  let failedNum = 0
   const req = () => {
-    let res: any;
     request(paramList[currentIndex]).then((data) => {
       if (data.status === 0) {
-        res = true;
+        succedNum += 1;
       }
     }).catch(() => {
-      res = false;
+      failedNum += 1;
     }).finally(() => {
-      let finish = currentIndex === (paramList.length - 1);
-      cb(res, finish);
+      finished += 1;
+      let finish = currentIndex >= paramList.length;
+      cb({succedNum, failedNum}, finished == paramList.length);
       if (!finish) {
         currentIndex += 1;
         req();
@@ -32,6 +35,9 @@ export const MultipleRequest = (request: (params: any) => Promise<any>, paramLis
     })
   }
   for (let i = 0; i < currentReqNum; i++) {
+    if (i == paramList.length) {
+      break;
+    }
     req();
     currentIndex += 1;
   }
