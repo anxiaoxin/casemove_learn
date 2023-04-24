@@ -19,6 +19,8 @@
     "jade": "~1.11.0",
     "jsonwebtoken": "^9.0.0",
     "morgan": "~1.9.1",
+    "mysql2": "^3.2.3",
+    "sequelize": "^6.31.0",
     "steam-user": "^4.28.1"
   }
 }

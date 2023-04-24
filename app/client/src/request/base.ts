@@ -19,7 +19,7 @@ const IconAuth = {
 };
 
 const http = axsio.create({
-  baseURL: 'localhost:3001/',
+  baseURL: '10.109.70.105:3001/',
   timeout: 300000,
 });
 
@@ -38,7 +38,7 @@ http.interceptors.request.use((config: any) => {
       // 'X-Token':'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2NvdW50SWQiOiJ6aGFuZ2NoYW80MSIsImZpcnN0TmFtZSI6IkNoYW8iLCJsYXN0TmFtZSI6IlpoYW5nIiwiZG9tYWluVHlwZSI6ImFkZnMtYWRtaW4iLCJkaXNwbGF5TmFtZSI6IkNoYW8gQ2hhbzQxIFpoYW5nIiwiZXhwIjoxNjc2NDQxNDU4LCJpYXQiOjE2NzYzNTUwNTgsImVtYWlsIjoiemhhbmdjaGFvNDFAbGVub3ZvLmNvbSJ9.hFvN7QJeg7HseMXpHn0E0pFULSrdLP8GvL4ARPuOgO8',
       'X-Token': Cookies.get('X-Token'),
     },
-    baseURL: 'http://localhost:3001',
+    baseURL: 'http://10.109.70.105:3001',
     auth: config.url?.indexOf('dtaas') === -1 ? '' : IconAuth,
   };
 });
