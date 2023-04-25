@@ -3,7 +3,8 @@ const SteamUsers = require('../api/steamUsers');
 const { sendSuccess } = require('../utils/util');
 const { getPrices } = require('../global/price');
 const { secretKey } = require('../constants');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const { checkSkey } = require('../service');
 var router = express.Router();
 
 /* GET home page. */
@@ -12,7 +13,9 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/login', async function(req, res, next){
-  const steamUser = SteamUsers.create(req.auth.username);
+  checkSkey(req.body.accountName, req.body.skey);
+  return ;
+  const steamUser = SteamUsers.create(req.body.accountName);
   let data;
 
   try {

@@ -69,7 +69,7 @@ autoUpdater.on('download-progress', (progressObj) => {
   sendUpdaterStatusToWindow(log_message);
 });
 autoUpdater.on('update-downloaded', (_info) => {
-  
+
   sendUpdaterStatusToWindow('Update downloaded');
 });
 

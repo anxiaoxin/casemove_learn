@@ -63,6 +63,13 @@ const Login = () => {
           >
             <Input placeholder='请输入令牌' />
           </Form.Item>
+          <Form.Item
+            name='skey'
+            label='卡密'
+            rules={[{ required: true, message: '请输入卡密' }]}
+          >
+            <Input placeholder='请输入卡密' />
+          </Form.Item>
         </Form>
       </div>
     </div>
