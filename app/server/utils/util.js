@@ -5,6 +5,13 @@ const sendSuccess = (res, data) =>{
   })
 }
 
+const sendNoUser = (res, data) => {
+  res.send({
+    status: 1
+  })
+}
+
 module.exports = {
-  sendSuccess
+  sendSuccess,
+  sendNoUser
 }

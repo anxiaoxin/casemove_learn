@@ -11,13 +11,12 @@ import SteamLogo from '../../../assets/images/logo_steam.svg';
 import { PathName } from "@/constants";
 
 const Home = () => {
-  const { userInfo, login } = useModel('user');
+  const { userInfo, loading: userLoading, getUserInfo } = useModel('user');
   const { caskets, casketsInventory, loading, loadCasketsContent } = useModel('storages');
   const [switchChecked, setSwitchChecked ] = useState(false);
   const [items, setItems ] = useState<any[]>([]);
 
   useEffect(() => {
-    console.log(switchChecked, caskets);
     if (switchChecked) {
       loadCasketsContent(caskets);
     } else {
@@ -27,12 +26,15 @@ const Home = () => {
   }, [switchChecked])
 
   useChanged(() => {
-    console.log('casketsInventory', casketsInventory);
     updateItems();
   }, [casketsInventory])
 
   useEffect(() => {
-    updateItems();
+    if (!userInfo) {
+      getUserInfo();
+    } else {
+      updateItems();
+    }
   }, [userInfo])
 
   const updateItems = () => {
@@ -70,13 +72,13 @@ const Home = () => {
           <div>
 
           </div>
-          总计：{userInfo.accounts?.total || 0}
-          <div>库存：{userInfo.accounts?.inventory || 0}</div>
-          <div>存储箱：{userInfo.accounts?.storage || 0}</div>
+          总计：{userInfo?.accounts?.total || 0}
+          <div>库存：{userInfo?.accounts?.inventory || 0}</div>
+          <div>存储箱：{userInfo?.accounts?.storage || 0}</div>
         </div>
         <span className="divider"></span>
         <div>
-          存储箱个数：{userInfo.accounts?.storageInventory || 0}
+          存储箱个数：{userInfo?.accounts?.storageInventory || 0}
           <div>
             <div className="move-button" onClick={pageToMove}>存/取</div>
           </div>
@@ -103,7 +105,7 @@ const Home = () => {
         <TabBar.Item key={item.key} icon={item.icon} title={item.title} />
       ))}
     </TabBar> */}
-    {loading && <Loading></Loading>}
+    {(loading && userLoading) && <Loading></Loading>}
   </>
 }
 

@@ -1,12 +1,15 @@
 var createError = require('http-errors');
 var express = require('express');
+const { expressjwt } = require('express-jwt')
+
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var {sqCtrl} = require('./sql/index')
+var {sqCtrl} = require('./sql/index');
+const { secretKey } = require('./constants');
 
 sqCtrl.check();
 
@@ -21,6 +24,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(expressjwt({
+    secret: secretKey,
+    algorithms: ['HS256']
+}).unless({
+  path: '/login'
+}))
+
 
 app.all('*', function (req, res, next) {
   res.header("Access-Control-Allow-Origin",req.headers.origin || '*');
@@ -45,9 +56,19 @@ app.use(function(err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
+  if (err.name === 'UnauthorizedError') {
+    res.status(401).send('invalid token')
+  }
+
   // render the error page
   res.status(err.status || 500);
   res.render('error');
 });
+
+app.use(function (err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401).send('invalid token')
+  }
+})
 
 module.exports = app;

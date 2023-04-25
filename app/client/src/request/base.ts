@@ -6,6 +6,8 @@ import { Modal } from 'antd';
 import axsio from 'axios';
 import qs from 'qs';
 import Cookies from 'js-cookie';
+import { history } from 'umi';
+import { PathName } from '@/constants';
 
 interface ResponseType {
   message: string;
@@ -19,7 +21,8 @@ const IconAuth = {
 };
 
 const http = axsio.create({
-  baseURL: '10.109.70.105:3001/',
+  // baseURL: '10.109.70.105:3001/',
+  baseURL: 'localhost:3001/',
   timeout: 300000,
 });
 
@@ -30,16 +33,11 @@ http.interceptors.request.use((config: any) => {
       return qs.stringify(params, { indices: false });
     },
     headers: {
-      Authorization:
-        config.url?.indexOf('dtaas') === -1
-          ? `Bearer ${Cookies.get('token')}`
-          : undefined,
-
-      // 'X-Token':'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2NvdW50SWQiOiJ6aGFuZ2NoYW80MSIsImZpcnN0TmFtZSI6IkNoYW8iLCJsYXN0TmFtZSI6IlpoYW5nIiwiZG9tYWluVHlwZSI6ImFkZnMtYWRtaW4iLCJkaXNwbGF5TmFtZSI6IkNoYW8gQ2hhbzQxIFpoYW5nIiwiZXhwIjoxNjc2NDQxNDU4LCJpYXQiOjE2NzYzNTUwNTgsImVtYWlsIjoiemhhbmdjaGFvNDFAbGVub3ZvLmNvbSJ9.hFvN7QJeg7HseMXpHn0E0pFULSrdLP8GvL4ARPuOgO8',
-      'X-Token': Cookies.get('X-Token'),
+      Authorization: `${Cookies.get('t-token')}`,
+      // 'X-Token': Cookies.get('X-Token'),
     },
-    baseURL: 'http://10.109.70.105:3001',
-    auth: config.url?.indexOf('dtaas') === -1 ? '' : IconAuth,
+    // baseURL: 'http://10.109.70.105:3001',
+    baseURL: 'http://localhost:3001',
   };
 });
 
@@ -75,6 +73,7 @@ http.interceptors.response.use(
     Modal.destroyAll();
     switch (response?.status) {
       case 401:
+        history.push(PathName.login);
         break;
       case 404:
         return Promise.resolve();

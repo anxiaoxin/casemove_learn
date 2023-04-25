@@ -6,3 +6,4 @@ export const getPriceUrl = '/getPrice';
 export const getCasketContentsUrl = '/getCasketContents';
 export const moveInUrl = '/moveIn';
 export const moveOutUrl = '/moveOut';
+export const getBaseInfoUrl = '/getBaseInfo';

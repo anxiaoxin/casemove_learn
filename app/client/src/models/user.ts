@@ -1,8 +1,9 @@
 import { useState } from "react"
-import { RefresInventory, UserLogin } from "../../src/request";
+import { GetBaseInfo, GetCasketContents, RefresInventory, UserLogin } from "../../src/request";
 import combineInventory from "../../api/filters/inventoryFunctions";
 import { getAccounts } from "../../api";
 import UserInfo from '../pages/login/res.json';
+import Cookies from "js-cookie";
 // import prices from '../../../api/prices';
 
 export const combineData = async (inventory: any) => {
@@ -34,25 +35,36 @@ export const combineData = async (inventory: any) => {
 
 const useUser = () => {
   const [haslogin, setHasLogin] = useState(false);
-  const [logging, setLogging] = useState(false);
-  const [userInfo, setUserInfo] = useState<any>({});
+  const [loading, setLoading] = useState(false);
+  const [userInfo, setUserInfo] = useState<any>();
 
   const login = async (params: any) => {
-    setLogging(true);
+    setLoading(true);
     UserLogin(params).then(async (data) => {
+      if (data.status === 0) {
+        Cookies.set('t-token', data.token);
+        setHasLogin(true);
+        setLoading(false);
+      }
+    }).catch(() => {
+      setLoading(false);
+    })
+  }
+
+  const getUserInfo = async() => {
+    setLoading(true);
+    GetBaseInfo({}).then(async (data) => {
       if (data.status === 0) {
         const filtedData = await combineData(data.data.csgoInventory);
         setUserInfo({...data.data, ...filtedData });
-        setHasLogin(true);
-        setLogging(false);
       }
-    }).catch(() => {
-      setLogging(false);
+    }).finally(() => {
+      setLoading(false);
     })
   }
 
   const refresh = async () => {
-    setLogging(true);
+    setLoading(true);
     RefresInventory({}).then(async (data) => {
       if (data.status === 0) {
         const filtedData = await combineData(data.data);
@@ -60,10 +72,10 @@ const useUser = () => {
       }
     }).catch(() => {
 
-    }).finally(() => setLogging(false));
+    }).finally(() => setLoading(false));
   }
 
-  return {haslogin, userInfo, login, logging, refresh};
+  return {haslogin, userInfo, login, loading, refresh, getUserInfo};
 }
 
 export default useUser;

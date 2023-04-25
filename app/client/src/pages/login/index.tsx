@@ -7,7 +7,7 @@ import { PathName } from '@/constants';
 import './index.less';
 
 const Login = () => {
-  const { haslogin, userInfo, login, logging } = useModel('user');
+  const { haslogin, login, loading } = useModel('user');
 
   useEffect(() => {
     if (haslogin) {
@@ -66,7 +66,7 @@ const Login = () => {
         </Form>
       </div>
     </div>
-    {logging && <Loading></Loading>}
+    {loading && <Loading></Loading>}
   </>;
 }
 

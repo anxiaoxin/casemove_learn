@@ -1,26 +1,51 @@
 var express = require('express');
-const SteamCtrl = require('../api/steamCtrl');
+const SteamUsers = require('../api/steamUsers');
 const { sendSuccess } = require('../utils/util');
 const { getPrices } = require('../global/price');
+const { secretKey } = require('../constants');
+const jwt = require('jsonwebtoken')
 var router = express.Router();
 
-let steamCtrl;
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
 router.post('/login', async function(req, res, next){
-  console.log('start login')
-  steamCtrl = new SteamCtrl();
+  const steamUser = SteamUsers.create(req.auth.username);
   let data;
+
   try {
-    data = await steamCtrl.login('guard', req.body);
-    console.log('data', data);
+    data = await steamUser.login('guard', req.body);
   } catch (error) {
     console.log('error', error)
   }
-  sendSuccess(res, data)
+
+  const { accountName } = req.body;
+  const token = 'Bearer ' + jwt.sign(
+    {username:accountName},
+    secretKey,
+    {expiresIn: 3600 * 2});
+
+  res.send({
+    status: 0,
+    data,
+    token
+  })
+})
+
+router.post('/getBaseInfo', async function(req, res, next) {
+  const steamUser = SteamUsers.get(req.auth.username);
+  if (!(steamUser instanceof Object)) {
+    res.send({status: 1, error: steamUser});
+    return;
+  }
+
+  try {
+    const info = await steamUser.getBaseInfo();
+  } catch (error) {
+
+  }
 })
 
 router.post('/refreshInventory', async function(req, res, next) {
@@ -34,7 +59,7 @@ router.get('/getPrice', async function(req, res, next) {
 })
 
 router.get('/getCasketContents', async function(req, res, next) {
-  console.log(req.query);
+  console.log(2222, req.query, req.auth);
   const { id } = req.query;
   const data = await steamCtrl.getCasketContents(id);
   console.log('res', data);
@@ -44,7 +69,6 @@ router.get('/getCasketContents', async function(req, res, next) {
 router.post('/moveOut', async function(req, res, next) {
   const { casketId, itemId } = req.body;
   const data = await steamCtrl.moveOut(casketId ,itemId);
-  console.log('res', data);
   sendSuccess(res, data);
 })
 

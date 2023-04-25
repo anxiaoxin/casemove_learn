@@ -8,10 +8,14 @@ const { currencyCodes } = require('../const');
 const { currency: CurrencyClass } = require('../api/steam/currency');
 
 class SteamCtrl {
+    name;
     sUser;
     csgo;
     fetchItemClass = new fetchItems();
     tradeUpClass = new tradeUps();
+    status = 1;
+    steamID = 0;
+    displayName = '';
 
     static getCurrency = (currency) => {
       const currencyClass  = new CurrencyClass();
@@ -20,10 +24,11 @@ class SteamCtrl {
       })
     }
 
-    constructor() {
-        this.sUser = new SteamUser();
-        this.csgo = new GlobalOffensive(this.sUser);
-        this.bindEvent();
+    constructor(name) {
+      this.name = name;
+      this.sUser = new SteamUser();
+      this.csgo = new GlobalOffensive(this.sUser);
+      this.bindEvent();
     }
 
     bindEvent() {
@@ -44,15 +49,10 @@ class SteamCtrl {
         })
 
         this.sUser.once('error', (error) => {
-          console.log('Error login: ', error);
           if (error == 'Error: LoggedInElsewhere') {
-            // ClassLoginResponse.setEmptyPackage()
-            // ClassLoginResponse.setResponseStatus('playingElsewhere')
-            // this._returnToSender();
+            this.status = 'logged in else where';
           } else {
-            // ClassLoginResponse.setEmptyPackage()
-            // ClassLoginResponse.setResponseStatus('defaultError')
-            // this._returnToSender();
+            this.status = 'error'
           }
         });
     }
@@ -71,6 +71,36 @@ class SteamCtrl {
         return new Promise((res, rej) => {
           this.logonRes = {res, rej}
         })
+    }
+
+    startEvents() {
+      this.csgo.on('disconnectedFromGC', (reason) => {
+        this.status = 'disconnectedFromGC';
+        this.removeEvents();
+      });
+
+      // User listeners
+      // Steam Connection
+      this.sUser.on('error', (eresult, msg) => {
+        this.status = 'error';
+        this.removeEvents();
+      });
+
+      this.sUser.on('disconnected', (eresult, msg) => {
+        this.status = 'disconnected';
+        this.removeEvents();
+      });
+    }
+
+    removeEvents() {
+      this.removeInventoryListeners();
+      this.csgo.removeAllListeners('connectedToGC');
+      this.csgo.removeAllListeners('disconnectedFromGC');
+
+      // Remove for user
+      this.sUser.removeAllListeners('error');
+      this.sUser.removeAllListeners('disconnected');
+      this.sUser.removeAllListeners('loggedOn');
     }
 
     startChangeEvents() {
@@ -171,32 +201,35 @@ class SteamCtrl {
           console.log('Connected to GC!');
           if (this.csgo.haveGCSession) {
             console.log('Have Session!');
-            this.fetchItemClass
-              .convertInventory(this.csgo.inventory)
-              .then((returnValue) => {
-                this.tradeUpClass
-                  .getTradeUp(returnValue)
-                  .then((newReturnValue) => {
-                    let walletToSend = this.sUser.wallet;
-                    if (walletToSend) {
-                      walletToSend.currency =
-                        currencyCodes[walletToSend.currency];
-                    }
-                    const returnPackage = {
-                      steamID: this.sUser.logOnResult.client_supplied_steamid,
-                      displayName,
-                      haveGCSession: this.csgo.haveGCSession,
-                      csgoInventory: newReturnValue,
-                      walletToSend: walletToSend,
-                    };
-                    console.log('returnPackage', returnPackage);
-                    this.logonRes.res(returnPackage)
-                    // startEvents(csgo, user);
-                  });
-              }).catch(e => {
-                this.logonRes.rej();
-              });
-          }
+            // this.fetchItemClass
+            //   .convertInventory(this.csgo.inventory)
+            //   .then((returnValue) => {
+            //     this.tradeUpClass
+            //       .getTradeUp(returnValue)
+            //       .then((newReturnValue) => {
+            //         let walletToSend = this.sUser.wallet;
+            //         if (walletToSend) {
+            //           walletToSend.currency =
+            //             currencyCodes[walletToSend.currency];
+            //         }
+
+            //         const returnPackage = {
+            //           steamID: this.sUser.logOnResult.client_supplied_steamid,
+            //           displayName,
+            //           haveGCSession: this.csgo.haveGCSession,
+            //           csgoInventory: newReturnValue,
+            //           walletToSend: walletToSend,
+            //         };
+
+            //         this.logonRes.res(returnPackage)
+            //         this.startEvents(csgo, user);
+            //       });
+            //   }).catch(e => {
+            //     this.logonRes.rej();
+            //   });
+
+              this.logonRes.res();
+            }
         });
       }
 
@@ -279,6 +312,37 @@ class SteamCtrl {
           // });
         }
       });
+    }
+
+    getBaseInfo() {
+      return Promise((res, rej) => {
+        try {
+          this.fetchItemClass
+            .convertInventory(this.csgo.inventory)
+            .then((returnValue) => {
+              this.tradeUpClass
+                .getTradeUp(returnValue)
+                .then((newReturnValue) => {
+                  let walletToSend = this.sUser.wallet;
+                  if (walletToSend) {
+                    walletToSend.currency =
+                      currencyCodes[walletToSend.currency];
+                  }
+
+                  const returnPackage = {
+                    steamID: this.steamID,
+                    displayName: this.displayName,
+                    haveGCSession: this.csgo.haveGCSession,
+                    csgoInventory: newReturnValue,
+                    walletToSend: walletToSend,
+                  };
+                  res(returnPackage);
+                });
+              });
+        } catch (error) {
+          rej(error);
+        }
+      })
     }
 
     async getCasketContents(casketID) {
