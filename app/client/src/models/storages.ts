@@ -22,7 +22,7 @@ const useStorage = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!userInfo.steamID) return;
+    if (!userInfo?.steamID) return;
     const newCaskets = getCaskets(userInfo.csgoInventory);
     setCaskets(newCaskets);
     console.log('update caskets', newCaskets);

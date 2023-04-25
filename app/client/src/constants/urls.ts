@@ -7,3 +7,4 @@ export const getCasketContentsUrl = '/getCasketContents';
 export const moveInUrl = '/moveIn';
 export const moveOutUrl = '/moveOut';
 export const getBaseInfoUrl = '/getBaseInfo';
+export const genSkeyUrl = '/genSkey';

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { ApplyPluginsType } from '/mnt/d/work/tmp/casemove_learn/app/client/node_modules/@umijs/runtime';
+import { ApplyPluginsType } from 'F:/linux/casemove_learn/app/client/node_modules/@umijs/runtime';
 import * as umiExports from './umiExports';
 import { plugin } from './plugin';
 
@@ -24,6 +24,11 @@ export function getRoutes() {
         "path": "/details",
         "exact": true,
         "component": require('@/pages/details/index.tsx').default
+      },
+      {
+        "path": "/genskey",
+        "exact": true,
+        "component": require('@/pages/genskey/index.tsx').default
       },
       {
         "path": "/home",

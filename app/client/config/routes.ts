@@ -48,6 +48,7 @@ export default [
       },
       { path: '/detail', title: '详情页', component: '@/pages/details/index' },
       { path: '/login', component: '@/pages/login/index' },
+      { path: '/genkey', component: '@/pages/genskey/index' },
       { path: '/moveout', component: '@/pages/moveout/index' },
       { path: '/*', component: '@/pages/404' },
       { path: '/move', component: '@/pages/move/index' },

@@ -3,6 +3,7 @@
 export * from './base';
 import { Delete, Get, Post, Put } from './base';
 import {
+  genSkeyUrl,
   getBaseInfoUrl,
   getCasketContentsUrl,
   getPriceUrl,
@@ -57,6 +58,8 @@ export const RefresInventory = async (params: any): Promise<any> =>
 export const GetPrice =async (params: any): Promise<any> =>
   Get(getPriceUrl, params);
 
+export const GetSkey =async (params: any): Promise<any> =>
+  Get(genSkeyUrl, params);
 
 export const GetCasketContents = async (params: any): Promise<any> =>
   // return Promise.resolve(ContentsJSON);
