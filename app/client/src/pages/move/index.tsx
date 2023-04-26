@@ -136,17 +136,21 @@ const SelectRow = (props: SelectRowProp) => {
 
     return <>
     <div className="select-row">
-        <div>
-            <img src={createCSGOImage(data?.item_url)} alt="" />
-            <div>{data.item_name}</div>
+        <div className="select-image-container">
+          <img src={createCSGOImage(data?.item_url)} alt="" />
         </div>
         <div className="select-row-operate">
-            {moveOut && <span style={{color: '#1296db'}}>{data.casket_name}</span>}
-            <span style={{color: 'rgb(5, 179, 5)'}}>{data.combined_QTY}</span>
-            <span className="select-row-input">
-                <Input type="number" max={data.combined_QTY} onFocus={onFocus} onBlur={onBlur} value={currentNum} onChange={onInputChange} style={{'--font-size': '20'}}></Input>
-            </span>
-            <span className="select-row-all" onClick={selectAll}>全部</span>
+            <div>{data.item_name}</div>
+            <div >
+              <span style={{color: 'rgb(5, 179, 5)'}}>总数：{data.combined_QTY}</span>
+              {moveOut && <span>所属箱：<span style={{color: '#1296db'}}>{data.casket_name}</span></span>}
+            </div>
+            <div>
+              <span className="select-row-input">
+                  <Input type="number" max={data.combined_QTY} onFocus={onFocus} onBlur={onBlur} value={currentNum} onChange={onInputChange} style={{'--font-size': '20'}}></Input>
+              </span>
+              <span className="select-row-all" onClick={selectAll}>全部</span>
+            </div>
         </div>
     </div>
     </>
@@ -237,7 +241,7 @@ const Move = () => {
     }, [currentSelected])
 
     useChanged(() => {
-      setCurrentSelected([]); 
+      setCurrentSelected([]);
       setSelectedCaskets([]);
       setInventorys([]);
     }, [currentTab])

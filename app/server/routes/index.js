@@ -1,10 +1,10 @@
 var express = require('express');
 const SteamUsers = require('../api/steamUsers');
-const { sendSuccess } = require('../utils/util');
+const { sendSuccess, sendFailed, getRandomCode } = require('../utils/util');
 const { getPrices } = require('../global/price');
 const { secretKey } = require('../constants');
 const jwt = require('jsonwebtoken');
-const { checkSkey } = require('../service');
+const { checkSkey, createUser } = require('../service');
 var router = express.Router();
 
 /* GET home page. */
@@ -13,8 +13,32 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/login', async function(req, res, next){
-  checkSkey(req.body.accountName, req.body.skey);
-  return ;
+  const { accountName, skey } = req.body;
+  const user = await checkSkey(accountName, skey);
+  if (user === null) {
+    sendFailed(res, 1, '用户不存在');
+    return;
+  }
+
+  if (user.skey !== skey) {
+    sendFailed(res, 1, '秘钥错误');
+    return;
+  }
+
+  const token = 'Bearer ' + jwt.sign(
+    {username:accountName},
+    secretKey,
+    {expiresIn: 3600 * 2});
+
+  if (user.isAdmin) {
+    res.send({
+      status: 0,
+      data: {isAdmin: true},
+      token
+    })
+    return;
+  }
+
   const steamUser = SteamUsers.create(req.body.accountName);
   let data;
 
@@ -24,12 +48,6 @@ router.post('/login', async function(req, res, next){
     console.log('error', error)
   }
 
-  const { accountName } = req.body;
-  const token = 'Bearer ' + jwt.sign(
-    {username:accountName},
-    secretKey,
-    {expiresIn: 3600 * 2});
-
   res.send({
     status: 0,
     data,
@@ -37,8 +55,9 @@ router.post('/login', async function(req, res, next){
   })
 })
 
-router.post('/getBaseInfo', async function(req, res, next) {
+router.get('/getBaseInfo', async function(req, res, next) {
   const steamUser = SteamUsers.get(req.auth.username);
+
   if (!(steamUser instanceof Object)) {
     res.send({status: 1, error: steamUser});
     return;
@@ -46,14 +65,25 @@ router.post('/getBaseInfo', async function(req, res, next) {
 
   try {
     const info = await steamUser.getBaseInfo();
+    sendSuccess(res, info);
   } catch (error) {
-
+    sendFailed(res, 1, '请求失败，请重试');
   }
 })
 
 router.post('/refreshInventory', async function(req, res, next) {
-  const data = await steamCtrl.refreshInventory();
-  sendSuccess(res, data);
+  const steamUser = SteamUsers.get(req.auth.username);
+  if (!(steamUser instanceof Object)) {
+    res.send({status: 1, error: steamUser});
+    return;
+  }
+
+  try {
+    const data = await steamUser.refreshInventory();
+    sendSuccess(res, data);
+  } catch(error) {
+    sendFailed(res, 1, '请求失败，请重试');
+  }
 })
 
 router.get('/getPrice', async function(req, res, next) {
@@ -62,25 +92,72 @@ router.get('/getPrice', async function(req, res, next) {
 })
 
 router.get('/getCasketContents', async function(req, res, next) {
-  console.log(2222, req.query, req.auth);
+  const steamuser = SteamUsers.get(req.auth.username);
+  if (!(steamUser instanceof Object)) {
+    res.send({status: 1, error: steamUser});
+    return;
+  }
+
   const { id } = req.query;
-  const data = await steamCtrl.getCasketContents(id);
-  console.log('res', data);
-  sendSuccess(res, data);
+
+  try {
+    const data = await steamuser.getCasketContents(id);
+    sendSuccess(res, data);
+  } catch (error) {
+    sendFailed(res, 1, '请求失败，请重试');
+  }
+
 })
 
 router.post('/moveOut', async function(req, res, next) {
+  const steamuser = SteamUsers.get(req.auth.username);
+  if (!(steamUser instanceof Object)) {
+    res.send({status: 1, error: steamUser});
+    return;
+  }
+
   const { casketId, itemId } = req.body;
-  const data = await steamCtrl.moveOut(casketId ,itemId);
-  sendSuccess(res, data);
+
+  try {
+    const data = await steamuser.moveOut(casketId ,itemId);
+    sendSuccess(res, data);
+  } catch (error) {
+    sendFailed(res, 1, '请求失败，请重试');
+  }
+
 })
 
 router.post('/moveIn', async function(req, res, next) {
+  const steamuser = SteamUsers.get(req.auth.username);
+  if (!(steamUser instanceof Object)) {
+    res.send({status: 1, error: steamUser});
+    return;
+  }
+
   const { casketId, itemId } = req.body;
-  const data = await steamCtrl.moveIn(casketId, itemId);
-  console.log('res', data);
-  sendSuccess(res, data);
+  try {
+    const data = await steamCtrl.moveIn(casketId, itemId);
+    sendSuccess(res, data);
+  } catch (error) {
+    sendFailed(res, 1, '请求失败，请重试');
+  }
 })
 
+router.get('/genSkey', async function(req, res, next) {
+  const { name } = req.query;
+  const user = await checkSkey(name);
+  if (user) {
+    sendFailed(res, 1, '用户已存在');
+    return;
+  }
+  const skey = getRandomCode(16);
+  const result = await createUser(name, skey);
+  if (result) {
+    sendSuccess(res, skey);
+    return;
+  } else {
+    sendFailed(res, 1, '创建失败');
+  }
+})
 
 module.exports = router;

@@ -3,12 +3,23 @@ const { User } = require("../sql/Models")
 const checkSkey = async (name, skey) => {
   const user = await User.findOne({
     where: {
-      username: name
+      name: name
     }
   });
-  console.log(11111, user);
+  return user;
+}
+
+const createUser = async (name, skey) => {
+  try {
+    const res = await User.create({name, skey});
+    return res;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }
 
 module.exports = {
-  checkSkey
+  checkSkey,
+  createUser
 }

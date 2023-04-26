@@ -4,6 +4,8 @@ import combineInventory from "../../api/filters/inventoryFunctions";
 import { getAccounts } from "../../api";
 import UserInfo from '../pages/login/res.json';
 import Cookies from "js-cookie";
+import { history } from "umi";
+import { PathName } from "@/constants";
 // import prices from '../../../api/prices';
 
 export const combineData = async (inventory: any) => {
@@ -44,6 +46,10 @@ const useUser = () => {
       if (data.status === 0) {
         Cookies.set('t-token', data.token);
         setHasLogin(true);
+        if (data.data?.isAdmin) {
+          history.push(PathName.skey);
+          return;
+        }
         setLoading(false);
       }
     }).catch(() => {

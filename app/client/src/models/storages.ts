@@ -22,7 +22,7 @@ const useStorage = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!userInfo?.steamID) return;
+    if (!userInfo) return;
     const newCaskets = getCaskets(userInfo.csgoInventory);
     setCaskets(newCaskets);
     console.log('update caskets', newCaskets);
@@ -32,7 +32,7 @@ const useStorage = () => {
     // setCasketInventory(Haha);
     // return;
     setLoading(true);
-    let contents: any = {...casketsInventory}; 
+    let contents: any = {...casketsInventory};
     try {
       for (let i = 0; i < caskets.length; i ++) {
         const casketId = caskets[i].item_id;

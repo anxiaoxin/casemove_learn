@@ -16,7 +16,7 @@ const Home = () => {
   const [switchChecked, setSwitchChecked ] = useState(false);
   const [items, setItems ] = useState<any[]>([]);
 
-  useEffect(() => {
+  useChanged(() => {
     if (switchChecked) {
       loadCasketsContent(caskets);
     } else {

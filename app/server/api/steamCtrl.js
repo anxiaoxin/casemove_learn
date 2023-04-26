@@ -201,6 +201,8 @@ class SteamCtrl {
           console.log('Connected to GC!');
           if (this.csgo.haveGCSession) {
             console.log('Have Session!');
+
+             this.steamID = this.sUser.logOnResult.client_supplied_steamid;
             // this.fetchItemClass
             //   .convertInventory(this.csgo.inventory)
             //   .then((returnValue) => {
@@ -315,7 +317,7 @@ class SteamCtrl {
     }
 
     getBaseInfo() {
-      return Promise((res, rej) => {
+      return new Promise((res, rej) => {
         try {
           this.fetchItemClass
             .convertInventory(this.csgo.inventory)
@@ -340,6 +342,7 @@ class SteamCtrl {
                 });
               });
         } catch (error) {
+          console.log(444444, error);
           rej(error);
         }
       })

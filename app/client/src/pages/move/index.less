@@ -63,22 +63,31 @@
 
 .select-row {
     display: flex;
-    justify-content: space-between;
     padding: 0 10px;
     font-size: 24px;
+    margin: 20px 0;
+
+   & > .select-image-container {
+      width: 240px;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: url('../../../assets/images/item_bg.png');
+      background-size: cover;
+    }
 
     & > .select-row-operate {
+      margin-left: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
 
-        & > span {
-            display: inline-block;
-            padding: 0 4px
-        }
-
-        & > .select-row-all {
-            background-color: rgb(251, 191, 36);
-            padding: 4px 14px;
-            border-radius: 4%;
-        }
+      & .select-row-all {
+        background-color: rgb(251, 191, 36);
+        padding: 4px 14px;
+        border-radius: 4%;
+      }
     }
 
     & img {
@@ -86,12 +95,12 @@
     }
 
     & .select-row-input {
-        width: 80px;
-        border: 1px solid #cac8c8;
-        padding: 0 8px;
-        margin-left: 30px;
-        margin-right: 20px;
-        border-radius: 4%;
+      display: inline-block;
+      width: 80px;
+      border: 1px solid #cac8c8;
+      padding: 0 8px;
+      margin-right: 20px;
+      border-radius: 4%;
     }
 
 }

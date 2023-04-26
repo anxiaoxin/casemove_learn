@@ -12,6 +12,7 @@ class SteamUsers {
       return user;
     } else {
       this.users[userName] = new SteamCtrl(userName);
+      return this.users[userName];
     }
   }
 

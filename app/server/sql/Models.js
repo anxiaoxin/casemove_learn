@@ -14,6 +14,10 @@ const User = sequelize.define('user', {
   },
   name: DataTypes.CHAR,
   skey: DataTypes.CHAR,
+  isAdmin: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
   updatedAt: DataTypes.TIME,
   createdAt: DataTypes.TIME
 })
