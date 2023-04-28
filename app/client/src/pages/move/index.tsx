@@ -308,7 +308,8 @@ const Move = () => {
           for (let i = 0; i < inventorys.length; i++) {
             if (inventorys[i].item_id === id) {
               try {
-                ids[inventorys[i].casket_id] = [...inventorys[i].combined_ids.slice(0, currentSelected[id])];
+                const res = ids[inventorys[i].casket_id] || [];
+                ids[inventorys[i].casket_id] = [...res, ...inventorys[i].combined_ids.slice(0, currentSelected[id])];
               } catch (error) {
 
               }
