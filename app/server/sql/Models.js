@@ -2,6 +2,8 @@ const { Sequelize, Model, DataTypes } = require('sequelize');
 
 const sequelize = new Sequelize('casemove', 'root', 'root', {
   host: 'localhost',
+  // host: '10.0.8.15',
+  // port: '3306',
   dialect: 'mysql'
 });
 

@@ -22,6 +22,7 @@ const IconAuth = {
 
 const http = axsio.create({
   baseURL: '10.109.70.105:3001/',
+  // baseURL: '43.138.19.3:3001/',
   // baseURL: 'localhost:3001/',
   timeout: 300000,
 });
@@ -38,6 +39,7 @@ http.interceptors.request.use((config: any) => {
     },
     baseURL: 'http://10.109.70.105:3001',
     // baseURL: 'http://localhost:3001',
+  // baseURL: '43.138.19.3:3001/',
   };
 });
 
