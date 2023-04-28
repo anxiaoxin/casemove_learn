@@ -16,6 +16,15 @@ class SteamUsers {
     }
   }
 
+  canUse(userName) {
+    const user = this.users[userName];
+    if (user && (user.status == 1)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   get(userName) {
     const user = this.users[userName];
     if(!user) {

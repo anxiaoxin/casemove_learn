@@ -29,7 +29,7 @@ app.use(expressjwt({
     secret: secretKey,
     algorithms: ['HS256']
 }).unless({
-  path: ['/login', '/genSkey']
+  path: ['/login']
 }))
 
 

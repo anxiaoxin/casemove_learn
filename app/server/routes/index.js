@@ -39,7 +39,17 @@ router.post('/login', async function(req, res, next){
     return;
   }
 
+  if (SteamUsers.canUse(req.body.accountName)) {
+    res.send({
+      status: 0,
+      data: true,
+      token
+    })
+    return;
+  }
+
   const steamUser = SteamUsers.create(req.body.accountName);
+
   let data;
 
   try {
@@ -92,7 +102,7 @@ router.get('/getPrice', async function(req, res, next) {
 })
 
 router.get('/getCasketContents', async function(req, res, next) {
-  const steamuser = SteamUsers.get(req.auth.username);
+  const steamUser = SteamUsers.get(req.auth.username);
   if (!(steamUser instanceof Object)) {
     res.send({status: 1, error: steamUser});
     return;
@@ -101,7 +111,7 @@ router.get('/getCasketContents', async function(req, res, next) {
   const { id } = req.query;
 
   try {
-    const data = await steamuser.getCasketContents(id);
+    const data = await steamUser.getCasketContents(id);
     sendSuccess(res, data);
   } catch (error) {
     sendFailed(res, 1, '请求失败，请重试');
@@ -110,7 +120,8 @@ router.get('/getCasketContents', async function(req, res, next) {
 })
 
 router.post('/moveOut', async function(req, res, next) {
-  const steamuser = SteamUsers.get(req.auth.username);
+  console.log(req.auth.username);
+  const steamUser = SteamUsers.get(req.auth.username);
   if (!(steamUser instanceof Object)) {
     res.send({status: 1, error: steamUser});
     return;
@@ -119,16 +130,20 @@ router.post('/moveOut', async function(req, res, next) {
   const { casketId, itemId } = req.body;
 
   try {
-    const data = await steamuser.moveOut(casketId ,itemId);
+    const data = await steamUser.moveOut(casketId ,itemId);
     sendSuccess(res, data);
   } catch (error) {
-    sendFailed(res, 1, '请求失败，请重试');
+    if (error === 'no session') {
+      sendFailed(res, 2, '');
+      return;
+    }
+    sendSuccess(res, false);
   }
 
 })
 
 router.post('/moveIn', async function(req, res, next) {
-  const steamuser = SteamUsers.get(req.auth.username);
+  const steamUser = SteamUsers.get(req.auth.username);
   if (!(steamUser instanceof Object)) {
     res.send({status: 1, error: steamUser});
     return;
@@ -136,14 +151,45 @@ router.post('/moveIn', async function(req, res, next) {
 
   const { casketId, itemId } = req.body;
   try {
-    const data = await steamCtrl.moveIn(casketId, itemId);
+    const data = await steamUser.moveIn(casketId, itemId);
     sendSuccess(res, data);
   } catch (error) {
-    sendFailed(res, 1, '请求失败，请重试');
+    if (error === 'no session') {
+      sendFailed(res, 2, '');
+      return;
+    }
+    sendSuccess(res, false);
+  }
+})
+
+router.post('/rename', async function(req, res, next) {
+  const steamUser = SteamUsers.get(req.auth.username);
+  if (!(steamUser instanceof Object)) {
+    res.send({status: 1, error: steamUser});
+    return;
+  }
+
+  const { casketId, name } = req.body;
+  try {
+    const data = await steamUser.renameStorageUnit(casketId, name);
+    sendSuccess(res, data);
+  } catch (error) {
+    if (error === 'no session') {
+      sendFailed(res, 2, '');
+      return;
+    }
+    sendSuccess(res, false);
   }
 })
 
 router.get('/genSkey', async function(req, res, next) {
+  const admin = await checkSkey(req.auth.username);
+  console.log(admin);
+  if (!admin || !admin.isAdmin) {
+    sendFailed(res, 1, '无操作权限');
+    return;
+  }
+
   const { name } = req.query;
   const user = await checkSkey(name);
   if (user) {

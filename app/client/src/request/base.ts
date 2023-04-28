@@ -21,8 +21,8 @@ const IconAuth = {
 };
 
 const http = axsio.create({
-  // baseURL: '10.109.70.105:3001/',
-  baseURL: 'localhost:3001/',
+  baseURL: '10.109.70.105:3001/',
+  // baseURL: 'localhost:3001/',
   timeout: 300000,
 });
 
@@ -36,8 +36,8 @@ http.interceptors.request.use((config: any) => {
       Authorization: `${Cookies.get('t-token')}`,
       // 'X-Token': Cookies.get('X-Token'),
     },
-    // baseURL: 'http://10.109.70.105:3001',
-    baseURL: 'http://localhost:3001',
+    baseURL: 'http://10.109.70.105:3001',
+    // baseURL: 'http://localhost:3001',
   };
 });
 
@@ -54,11 +54,18 @@ http.interceptors.response.use(
       return Promise.reject({});
     }
     // 100004 == token过期
-    if (
-      data?.status !== 0 &&
-      data?.status !== 100005 &&
-      !(data instanceof Blob)
-    ) {
+
+    if(data?.status === 2) {
+      Modal.destroyAll();
+      Modal.error({
+        title: 'error',
+        content: 'steam 登录过期，请重新登录',
+        onOk: () => {
+          history.push(PathName.login);
+        }
+      })
+      return Promise.reject(data);
+    } else if(data?.status !== 0) {
       Modal.destroyAll();
       Modal.error({
         title: 'error',

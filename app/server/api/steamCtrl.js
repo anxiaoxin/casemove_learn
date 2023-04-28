@@ -125,7 +125,6 @@ class SteamCtrl {
       });
 
       this.csgo.on('itemChanged', (item) => {
-        console.log('item changed', item);
         return;
         fetchItemClass.convertInventory(csgo.inventory).then((returnValue) => {
           tradeUpClass.getTradeUp(returnValue).then((newReturnValue) => {
@@ -175,7 +174,6 @@ class SteamCtrl {
     }
 
     removeInventoryListeners() {
-      console.log('Removed inventory listeners');
       this.csgo.removeAllListeners('itemRemoved');
       this.csgo.removeAllListeners('itemChanged');
       this.csgo.removeAllListeners('itemAcquired');
@@ -184,7 +182,6 @@ class SteamCtrl {
     refreshInventory() {
       return new Promise((res) => {
         this.fetchItemClass.convertInventory(this.csgo.inventory).then((returnValue) => {
-          console.log('returnvalue', returnValue);
           this.tradeUpClass.getTradeUp(returnValue).then((newReturnValue) => {
             res(newReturnValue);
           });
@@ -342,7 +339,6 @@ class SteamCtrl {
                 });
               });
         } catch (error) {
-          console.log(444444, error);
           rej(error);
         }
       })
@@ -363,10 +359,19 @@ class SteamCtrl {
 
     // Remove items from storage unit
     moveOut(casketId, itemId, fastMode = false) {
+      console.log('haveGCsession', this.csgo.haveGCSession);
+      if (!this.csgo.haveGCSession) {
+
+      }
       return new Promise((res, rej) => {
         // 操作的时候将监听事件移除
+
+        if (!this.csgo.haveGCSession) {
+          rej('no session');
+          return;
+        }
+
         this.removeInventoryListeners();
-        console.log(casketId, itemId);
         this.csgo.removeFromCasket(casketId, itemId);
         // 如果是fastmode 则不监听该结果
         if (fastMode == false) {
@@ -378,36 +383,76 @@ class SteamCtrl {
                 notificationType ==
                 GlobalOffensive.ItemCustomizationNotification.CasketRemoved
               ) {
-                console.log(itemIds + ' got an item removed from it');
-                res()
+                res(true)
+              } else {
+                console.log(111, notificationType);
               }
             }
           );
         }
+        setTimeout(() => {
+          rej();
+        }, 3000)
       })
     }
 
     moveIn(casketId, itemId, fastMode = false) {
-      return new Promise((res, resj) => {
+      console.log('haveGCsession', this.csgo.haveGCSession);
+      return new Promise((res, rej) => {
+
+        if (!this.csgo.haveGCSession) {
+          rej('no session');
+          return;
+        }
+
         this.csgo.addToCasket(casketId, itemId);
-        console.log('casketId', casketId, itemId);
         this.removeInventoryListeners();
         if (fastMode == false) {
           this.csgo.once(
             'itemCustomizationNotification',
             (itemIds, notificationType) => {
-              console.log('notification', notificationType, itemIds);
               if (
                 notificationType ==
                 GlobalOffensive.ItemCustomizationNotification.CasketAdded
               ) {
-                res();
+                res(true);
+              } else {
+                console.log(111, notificationType);
               }
+
             }
           );
         }
+
+        setTimeout(() => {
+          rej();
+        }, 3000);
+      });
+    }
+
+    renameStorageUnit(itemID, newName) {
+      return new Promise((res, rej) => {
+
+        if (!this.csgo.haveGCSession) {
+          rej('no session');
+          return;
+        }
+
+        this.csgo.nameItem(0, itemID, newName);
+        this.csgo.once('itemCustomizationNotification', (itemIds, notificationType) => {
+          if (
+            notificationType ==
+            GlobalOffensive.ItemCustomizationNotification.NameItem
+          ) {
+            res(true);
+          }
+        })
+        setTimeout(() => {
+          rej(false);
+        }, 3000)
       });
     }
 }
+
 
 module.exports = SteamCtrl;

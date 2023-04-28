@@ -49,7 +49,17 @@ const useStorage = () => {
     return contents;
   }
 
-  return {caskets, casketsInventory, loading, loadCasketsContent};
+  const renameCaskets = (id: string, name: string) => {
+    for(let i = 0; i < caskets.length; i ++) {
+      if (caskets[i].item_id === id) {
+        caskets[i].item_customname = name;
+        break;
+      }
+    }
+    setCaskets(caskets);
+  }
+
+  return {caskets, casketsInventory, loading, loadCasketsContent, renameCaskets};
 }
 
 

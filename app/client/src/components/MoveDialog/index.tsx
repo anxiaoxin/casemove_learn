@@ -27,7 +27,6 @@ const MoveDialog = (props: MoveDialogProps) => {
 
     MultipleRequest(moveout ? MoveOut : MoveIn, params, (res: any, finish: boolean ) => {
       setRes(res);
-      console.log('finish', finish);
       if (finish) {
         onEnd();
       }
@@ -46,8 +45,9 @@ const MoveDialog = (props: MoveDialogProps) => {
       <div className={`move-number bg-pan-right ${flipClass}`}>
         {count - res.succedNum}
       </div>
-      <div>
-
+      <div style={{textAlign: 'center'}}>
+        {res.failedNum ? <div style={{marginTop: 10, fontSize: 12}}>失败个数：<span style={{color: 'red'}}>{res.failedNum}</span></div> : ''}
+        <div style={{marginTop: 10}}>移动中，请耐心等待。</div>
       </div>
     </div>
   </>

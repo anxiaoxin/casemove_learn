@@ -57,18 +57,18 @@ const Login = () => {
             <Input placeholder='请输入密码' type='password' />
           </Form.Item>
           <Form.Item
-            name='twoFactorCode'
-            label='令牌'
-            rules={[{ required: true, message: '请输入令牌' }]}
-          >
-            <Input placeholder='请输入令牌' />
-          </Form.Item>
-          <Form.Item
             name='skey'
             label='卡密'
             rules={[{ required: true, message: '请输入卡密' }]}
           >
             <Input placeholder='请输入卡密' />
+          </Form.Item>
+          <Form.Item
+            name='twoFactorCode'
+            label='令牌'
+            rules={[{ required: true, message: '请输入令牌' }]}
+          >
+            <Input placeholder='请输入令牌' />
           </Form.Item>
         </Form>
       </div>

@@ -7,22 +7,24 @@ import {
   getBaseInfoUrl,
   getCasketContentsUrl,
   getPriceUrl,
-  loginUrl, moveInUrl, moveOutUrl, refreshInventoryUrl,
+  loginUrl, moveInUrl, moveOutUrl, refreshInventoryUrl, renameStorageUnitUrl,
 } from '@/constants/urls';
 import ContentsJSON from './getCasketContents.json'
 import UserInfo from '../pages/login/res.json';
 
 // 针对同一个请求不同参数的批量操作
 export const MultipleRequest = (request: (params: any) => Promise<any>, paramList: any[], cb: (res: any, finish: boolean) => any) => {
-  let currentReqNum = 5;
+  let currentReqNum = 1;
   let currentIndex = 0;
   let finished  = 0;
   let succedNum = 0;
   let failedNum = 0
   const req = () => {
+    console.log('param', paramList[currentIndex], currentIndex);
     request(paramList[currentIndex]).then((data) => {
-      if (data.status === 0) {
-        succedNum += 1;
+      succedNum += 1;
+      if (!data.data) {
+        failedNum += 1;
       }
     }).catch(() => {
       failedNum += 1;
@@ -30,9 +32,10 @@ export const MultipleRequest = (request: (params: any) => Promise<any>, paramLis
       finished += 1;
       let finish = currentIndex >= paramList.length;
       cb({succedNum, failedNum}, finished == paramList.length);
+      if (failedNum) return;
       if (!finish) {
-        currentIndex += 1;
         req();
+        currentIndex += 1;
       }
     })
   }
@@ -70,3 +73,6 @@ export const MoveIn = async (params: any): Promise<any> =>
 
 export const MoveOut = async (params: any): Promise<any> =>
   Post(moveOutUrl, params);
+
+export const RenameStorageUnit = async (params: any): Promise<any> =>
+  Post(renameStorageUnitUrl, params);

@@ -105,7 +105,7 @@ const Home = () => {
         <TabBar.Item key={item.key} icon={item.icon} title={item.title} />
       ))}
     </TabBar> */}
-    {(loading && userLoading) && <Loading></Loading>}
+    {(loading || userLoading) && <Loading></Loading>}
   </>
 }
 

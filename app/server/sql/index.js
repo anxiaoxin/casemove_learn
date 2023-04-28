@@ -18,11 +18,8 @@ class SqlController {
   async connect() {
     try {
       await this.db.authenticate();
-      const users = await User.findAll();
-      console.log(1111, users);
       return true;
     } catch (error) {
-      console.log(error);
       return false;
     }
   }

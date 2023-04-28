@@ -4,15 +4,13 @@ import EditImage from '../../../assets/images/edit.png';
 import { useEffect, useState } from "react";
 import useChanged from "@/utils/hooks/useChanged";
 import Loading from "../../components/loading/loding";
-import { Input, Tabs } from "antd-mobile";
+import { Input, Modal, Tabs } from "antd-mobile";
 import combineInventory, { excludeCasket, sortDataFunctionTwo } from "../../../api/filters/inventoryFunctions";
 import MoveInImage from '../../../assets/images/存入.svg';
 import MoveOutImage from '../../../assets/images/取出.svg';
 import './index.less';
-import eventBus from "@/utils/eventBus";
-import { MoveIn, MoveOut, MultipleRequest } from "@/request";
-import MoveDialog from "@/components/MoveDialog";
 import useMoveDialog from "@/components/MoveDialog";
+import useRenameDialog from "@/components/RenameDialog";
 
 interface MoveHeaderProp {
     onSelected: (items: string[]) => void,
@@ -31,11 +29,23 @@ interface SelectRowProp {
 const MoveHeader = (props: MoveHeaderProp) => {
     const { onSelected, moveOut, onMove } = props;
     const { userInfo } = useModel('user');
-    const { caskets, casketsInventory, loading, loadCasketsContent } = useModel('storages');
+    const { caskets } = useModel('storages');
     const [selected, setSelected] = useState<string[]>([]);
+    const { show, loading } = useRenameDialog();
     console.log('casckets', caskets);
 
+    const rename = (id: string, name: string) => {
+      show(id, name);
+    }
+
     const updateSelected = (item: any) => {
+      if (item.item_customname === null) {
+        Modal.alert({
+          title: 'error',
+          content: '请命名以激活该存储箱',
+        });
+        return;
+      }
         const tmp = [...selected];
         const index = tmp.indexOf(item.item_id);
         if (!moveOut ) {
@@ -57,6 +67,7 @@ const MoveHeader = (props: MoveHeaderProp) => {
     return <>
         <div className="move-operate">
             当前库存：{userInfo?.accounts?.inventory}
+            <span>已隐藏{moveOut? "空箱": '满箱'}</span>
             <div className="move-button">
               <span onClick={() => onMove(moveOut)}>
                 {moveOut ? '取出' : '存入'}
@@ -70,18 +81,22 @@ const MoveHeader = (props: MoveHeaderProp) => {
                     if (moveOut && item.item_storage_total === 0) {
                       return '';
                     }
+                    if(!moveOut && item.item_storage_total === 1000) {
+                      return '';
+                    }
                     return <div className={selected.indexOf(item.item_id) > -1 ? "move-storage-item selected" : 'move-storage-item'}>
                         <div className="move-storage-image" onClick={()=> updateSelected(item)}>
                             <img src={createCSGOImage(item.item_url)} alt="" />
                         </div>
                         <div className="move-storage-info">
-                            <div>名称:  <span>{item.item_customname} <img src={EditImage} alt="" /></span></div>
+                            <div>名称:  <span>{item.item_customname} <img onClick={() => rename(item.item_id, item.item_customname)} src={EditImage} alt="" /></span></div>
                             <div className="move-storage-number">已存储： <span>{item.item_storage_total}</span></div>
                         </div>
                     </div>
                 })}
             </div>
         </div>
+        {loading && <Loading></Loading>}
     </>
 }
 
@@ -142,7 +157,7 @@ const SelectRow = (props: SelectRowProp) => {
         <div className="select-row-operate">
             <div>{data.item_name}</div>
             <div >
-              <span style={{color: 'rgb(5, 179, 5)'}}>总数：{data.combined_QTY}</span>
+              <span style={{color: 'rgb(5, 179, 5)', marginRight: 10}}>总数：{data.combined_QTY}</span>
               {moveOut && <span>所属箱：<span style={{color: '#1296db'}}>{data.casket_name}</span></span>}
             </div>
             <div>
@@ -340,13 +355,16 @@ const Move = () => {
       }
     }, [end])
 
+    console.log(1111, remainingNum);
+
     return <>
         <Tabs onChange={onTabChange} activeKey={currentTab}>
           <Tabs.Tab title='存入' key='movein'>
             <MoveHeader onMove={onMove} onSelected={onSelectChange} moveOut={currentTab === 'moveout'} ></MoveHeader>
             <div>
                 {excludeCasket(userInfo.combinedInventory).map((item: any)  => {
-                    return <SelectRow caskets={selectedCaskets} max={remainingNum} data={item} onNumberChange={onNumberChange}></SelectRow>;
+                  if (!item.item_moveable) return '';
+                  return <SelectRow caskets={selectedCaskets} max={remainingNum} data={item} onNumberChange={onNumberChange}></SelectRow>;
                 })}
             </div>
           </Tabs.Tab>
@@ -354,7 +372,8 @@ const Move = () => {
             <MoveHeader onMove={onMove} onSelected={onSelectChange} moveOut={currentTab === 'moveout'}></MoveHeader>
             <div>
                 {inventorys.map((item: any) => {
-                    return <SelectRow caskets={selectedCaskets} max={remainingNum} moveOut={currentTab === 'moveout'} data={item} onNumberChange={onNumberChange}></SelectRow>;
+                  if (!item.item_moveable) return '';
+                  return <SelectRow caskets={selectedCaskets} max={remainingNum} moveOut={currentTab === 'moveout'} data={item} onNumberChange={onNumberChange}></SelectRow>;
                 })}
             </div>
           </Tabs.Tab>
