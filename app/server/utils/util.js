@@ -1,3 +1,6 @@
+const AES = require('crypto-js/aes');
+const CryptoJS = require('crypto-js');
+
 const sendSuccess = (res, data) =>{
   res.send({
     status: 0,
@@ -32,9 +35,22 @@ const getRandomCode = (length) => {
    }
 }
 
+const decode = (text) => {
+    const key = CryptoJS.enc.Utf8.parse('2e35f242a46d67eeb74aabc37d5e5d05');
+    const iv = CryptoJS.enc.Utf8.parse('Psz4QMjfl6fDXxv6');
+
+    const res = AES.decrypt(text, key, {
+      iv,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7 
+    })
+    return res.toString(CryptoJS.enc.Utf8);
+}
+
 module.exports = {
   sendSuccess,
   sendNoUser,
   getRandomCode,
-  sendFailed
+  sendFailed,
+  decode
 }

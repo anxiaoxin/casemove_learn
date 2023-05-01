@@ -5,6 +5,7 @@ import Loading from '@/components/loading/loding';
 import { history, useModel } from 'umi';
 import { PathName } from '@/constants';
 import './index.less';
+import { encode } from '@/utils';
 
 const Login = () => {
   const { haslogin, login, loading } = useModel('user');
@@ -16,6 +17,11 @@ const Login = () => {
   }, [haslogin])
 
   const onFinish = (values:any) => {
+    values.password = encode(values.password);
+    values.skey = encode(values.skey);
+    values.twoFactorCode = encode(values.twoFactorCode);
+    console.log(3333, values);
+    return;
     login(values);
   }
 

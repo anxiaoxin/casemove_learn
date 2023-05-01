@@ -3,6 +3,7 @@
 import { StringIndexMap } from '@/type';
 import { Modal } from 'antd';
 import permission from './permission';
+import { AES, enc, mode, pad } from 'crypto-js';
 
 export const comma = (num: string) => {
   const source = num.split('.'); //按小数点分成2部分
@@ -26,3 +27,14 @@ export const DeleteModal = (config: any) => {
     ...config,
   });
 };
+
+export const encode = (text: string) => {
+    const key = enc.Utf8.parse('2e35f242a46d67eeb74aabc37d5e5d05');
+    const iv = enc.Utf8.parse('Psz4QMjfl6fDXxv6');
+    const res = AES.encrypt(text, key, {
+      iv,
+      mode: mode.CBC,
+      padding: pad.Pkcs7 
+    })
+    return res.toString();
+}

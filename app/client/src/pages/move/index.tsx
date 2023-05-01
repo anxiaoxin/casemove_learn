@@ -22,7 +22,7 @@ interface SelectRowProp {
     data: any,
     onNumberChange: (id: string, num: number) => void,
     max: number,
-    caskets: any,
+    caskets: any[],
     moveOut?: boolean
 }
 
@@ -104,6 +104,10 @@ const SelectRow = (props: SelectRowProp) => {
     const { data, onNumberChange, max, caskets, moveOut } = props;
     const [currentNum, setCurrentNum] = useState('0');
     const onInputChange = (value: string) => {
+      if (!caskets.length) {
+        Modal.alert({content: '请选择一个存储箱'});
+        return;
+      }
       let res:any = value;
         if (+value > data.combined_QTY) {
           res = data.combined_QTY;
@@ -119,6 +123,12 @@ const SelectRow = (props: SelectRowProp) => {
     }
 
     const selectAll = () => {
+
+      if (!caskets.length) {
+        Modal.alert({content: '请选择一个存储箱'});
+        return;
+      }
+
       if (max == 0) return;
 
       const num = data.combined_QTY < (+currentNum + max)  ? data.combined_QTY : (+currentNum + max);
@@ -159,6 +169,11 @@ const SelectRow = (props: SelectRowProp) => {
             <div >
               <span style={{color: 'rgb(5, 179, 5)', marginRight: 10}}>总数：{data.combined_QTY}</span>
               {moveOut && <span>所属箱：<span style={{color: '#1296db'}}>{data.casket_name}</span></span>}
+              {data.trade_unlock &&<span style={{marginLeft: 10}}>剩余：<span style={{color: 'red'}}>
+                {
+                  Math.ceil(((new Date(data.trade_unlock)).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+                }天
+                </span></span>}
             </div>
             <div>
               <span className="select-row-input">
@@ -221,7 +236,7 @@ const Move = () => {
                   items.push(...casketsData[id]);
                 }
             })
-            const combinedData = await combineInventory(items, {ignoreUnlock: true, ignoreCustomname: true, casket: true});
+            const combinedData = await combineInventory(items, {ignoreCustomname: true, casket: true});
             setInventorys(sortDataFunctionTwo('QTY', combinedData, {}, {}));
         }
 
@@ -259,6 +274,7 @@ const Move = () => {
       setCurrentSelected([]);
       setSelectedCaskets([]);
       setInventorys([]);
+      setRemainingNum(0);
     }, [currentTab])
 
     const refreshInventory = async () => {
@@ -291,7 +307,7 @@ const Move = () => {
                 items.push(...casketsData[id]);
               }
           })
-          const combinedData = await combineInventory(items, {ignoreUnlock: true, ignoreCustomname: true, casket: true});
+          const combinedData = await combineInventory(items, {ignoreCustomname: true, casket: true});
           setInventorys(sortDataFunctionTwo('QTY', combinedData, {}, {}));
         }
     }
@@ -355,8 +371,6 @@ const Move = () => {
         setEnd(false);
       }
     }, [end])
-
-    console.log(1111, remainingNum);
 
     return <>
         <Tabs onChange={onTabChange} activeKey={currentTab}>

@@ -1,6 +1,6 @@
 var express = require('express');
 const SteamUsers = require('../api/steamUsers');
-const { sendSuccess, sendFailed, getRandomCode } = require('../utils/util');
+const { sendSuccess, sendFailed, getRandomCode, decode } = require('../utils/util');
 const { getPrices } = require('../global/price');
 const { secretKey } = require('../constants');
 const jwt = require('jsonwebtoken');
@@ -13,15 +13,18 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/login', async function(req, res, next){
-  const { accountName, skey } = req.body;
-  const user = await checkSkey(accountName, skey);
+  const { accountName, skey, password, twoFactorCode } = req.body;
+  const skeyD = decode(skey);
+  const passwordD = decode(password);
+  const twoFactorCodeD = decode(twoFactorCode);
+  const user = await checkSkey(accountName, skeyD);
   if (user === null) {
     sendFailed(res, 1, '用户不存在');
     return;
   }
 
-  if (user.skey !== skey) {
-    sendFailed(res, 1, '秘钥错误');
+  if (user.skey !== skeyD) {
+    sendFailed(res, 1, '卡密错误');
     return;
   }
 
@@ -53,7 +56,7 @@ router.post('/login', async function(req, res, next){
   let data;
 
   try {
-    data = await steamUser.login('guard', req.body);
+    data = await steamUser.login('guard', {accountName, password: passwordD, twoFactorCode: twoFactorCodeD});
   } catch (error) {
     console.log('error', error)
   }

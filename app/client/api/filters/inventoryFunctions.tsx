@@ -47,7 +47,6 @@ async function getCategory(toLoopThrough: Array<ItemRow | ItemRowStorage>, addit
 
 // This will combine the inventory when specific conditions match
  const combineInventory = (thisInventory: Array<ItemRow | ItemRowStorage>, settings: {ignoreUnlock?: boolean, ignoreCustomname?: boolean, casket?: boolean}, additionalObjectToAdd: any = {}) => {
-  console.log(88888, thisInventory);
   const inventory =[...thisInventory];
   const seenProducts = [] as any;
   const newInventory = [] as any;
