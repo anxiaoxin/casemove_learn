@@ -16,12 +16,15 @@ const Login = () => {
     }
   }, [haslogin])
 
+  useEffect(()=>{
+    console.log('login page');
+  }, [])
+
   const onFinish = (values:any) => {
     values.password = encode(values.password);
     values.skey = encode(values.skey);
     values.twoFactorCode = encode(values.twoFactorCode);
     console.log(3333, values);
-    return;
     login(values);
   }
 
