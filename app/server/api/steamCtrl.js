@@ -36,6 +36,7 @@ class SteamCtrl {
             console.log('has logged on');
             this.sUser.once('accountInfo', (displayName) => {
                 console.log('displayName', displayName);
+                this.displayName = displayName;
                 this.csgoStart(displayName);
             })
         });

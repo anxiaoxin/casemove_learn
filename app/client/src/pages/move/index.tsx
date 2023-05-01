@@ -11,6 +11,7 @@ import MoveOutImage from '../../../assets/images/取出.svg';
 import './index.less';
 import useMoveDialog from "@/components/MoveDialog";
 import useRenameDialog from "@/components/RenameDialog";
+import PageHeader from "@/components/HeadBack";
 
 interface MoveHeaderProp {
     onSelected: (items: string[]) => void,
@@ -373,26 +374,29 @@ const Move = () => {
     }, [end])
 
     return <>
-        <Tabs onChange={onTabChange} activeKey={currentTab}>
-          <Tabs.Tab title='存入' key='movein'>
-            <MoveHeader onMove={onMove} onSelected={onSelectChange} moveOut={currentTab === 'moveout'} ></MoveHeader>
-            <div>
-                {excludeCasket(userInfo.combinedInventory).map((item: any)  => {
-                  if (!item.item_moveable) return '';
-                  return <SelectRow caskets={selectedCaskets} max={remainingNum} data={item} onNumberChange={onNumberChange}></SelectRow>;
-                })}
-            </div>
-          </Tabs.Tab>
-          <Tabs.Tab title='取出' key='moveout'>
-            <MoveHeader onMove={onMove} onSelected={onSelectChange} moveOut={currentTab === 'moveout'}></MoveHeader>
-            <div>
-                {inventorys.map((item: any) => {
-                  if (!item.item_moveable) return '';
-                  return <SelectRow caskets={selectedCaskets} max={remainingNum} moveOut={currentTab === 'moveout'} data={item} onNumberChange={onNumberChange}></SelectRow>;
-                })}
-            </div>
-          </Tabs.Tab>
-        </Tabs>
+        <PageHeader text="存取存储箱" ></PageHeader>
+        <div className="move-page">
+          <Tabs onChange={onTabChange} activeKey={currentTab}>
+            <Tabs.Tab title='存入' key='movein'>
+              <MoveHeader onMove={onMove} onSelected={onSelectChange} moveOut={currentTab === 'moveout'} ></MoveHeader>
+              <div>
+                  {excludeCasket(userInfo.combinedInventory).map((item: any)  => {
+                    if (!item.item_moveable) return '';
+                    return <SelectRow caskets={selectedCaskets} max={remainingNum} data={item} onNumberChange={onNumberChange}></SelectRow>;
+                  })}
+              </div>
+            </Tabs.Tab>
+            <Tabs.Tab title='取出' key='moveout'>
+              <MoveHeader onMove={onMove} onSelected={onSelectChange} moveOut={currentTab === 'moveout'}></MoveHeader>
+              <div>
+                  {inventorys.map((item: any) => {
+                    if (!item.item_moveable) return '';
+                    return <SelectRow caskets={selectedCaskets} max={remainingNum} moveOut={currentTab === 'moveout'} data={item} onNumberChange={onNumberChange}></SelectRow>;
+                  })}
+              </div>
+            </Tabs.Tab>
+          </Tabs>
+        </div>
 
         {loading && <Loading></Loading>}
     </>

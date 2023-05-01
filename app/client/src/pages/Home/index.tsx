@@ -63,7 +63,10 @@ const Home = () => {
       <div className="home-head">
         <div>
           <img width={180} src={SteamLogo} alt="" />
-          CSGO TOOLS
+          <div style={{textAlign: 'right'}}>
+            CSGO TOOLS
+            <div>你好，{userInfo.displayName}</div>
+          </div> 
         </div>
       </div>
       <div className="home-info">
@@ -87,12 +90,15 @@ const Home = () => {
       <Divider />
       <div className="inventory-name">
         库存总览：
+        <div>
+          <span style={{paddingRight: 8}}>提取存储箱</span> 
           <Switch
             checked={switchChecked}
             onChange={val => {
               setSwitchChecked(val)
             }}
           />
+        </div>
       </div>
       <div className="item-body">
         {items.map((item: any) => {
