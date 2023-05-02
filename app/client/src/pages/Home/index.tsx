@@ -65,7 +65,7 @@ const Home = () => {
           <img width={180} src={SteamLogo} alt="" />
           <div style={{textAlign: 'right'}}>
             CSGO TOOLS
-            <div>你好，{userInfo.displayName}</div>
+            <div>你好，{userInfo?.displayName}</div>
           </div> 
         </div>
       </div>
