@@ -45,6 +45,7 @@ const useUser = () => {
     UserLogin(params).then(async (data) => {
       if (data.status === 0) {
         Cookies.set('t-token', data.token);
+        Cookies.set('name', params.accountName);
         setHasLogin(true);
         if (data.data?.isAdmin) {
           history.push(PathName.skey);

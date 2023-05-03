@@ -6,9 +6,11 @@ import { history, useModel } from 'umi';
 import { PathName } from '@/constants';
 import './index.less';
 import { encode } from '@/utils';
+import Cookies from 'js-cookie';
 
 const Login = () => {
   const { haslogin, login, loading } = useModel('user');
+  const [form] = Form.useForm()
 
   useEffect(() => {
     if (haslogin) {
@@ -18,13 +20,16 @@ const Login = () => {
 
   useEffect(()=>{
     console.log('login page');
+    const name = Cookies.get('name');
+    if (name) {
+      form.setFieldValue('accountName', name);
+    }
   }, [])
 
   const onFinish = (values:any) => {
     values.password = encode(values.password);
     values.skey = encode(values.skey);
     values.twoFactorCode = encode(values.twoFactorCode);
-    console.log(3333, values);
     login(values);
   }
 
@@ -42,6 +47,7 @@ const Login = () => {
         <Form
         layout='vertical'
         onFinish={onFinish}
+        form={form}
         mode='card'
         footer={
           <Button block type='submit'

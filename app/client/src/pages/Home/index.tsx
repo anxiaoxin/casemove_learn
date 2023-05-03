@@ -70,19 +70,18 @@ const Home = () => {
         </div>
       </div>
       <div className="home-info">
-        <div>
+        <div className="home-info-left">
           库存
           <div>
-
+            总计：<span>{userInfo?.accounts?.total || 0}</span>
           </div>
-          总计：{userInfo?.accounts?.total || 0}
-          <div>库存：{userInfo?.accounts?.inventory || 0}</div>
-          <div>存储箱：{userInfo?.accounts?.storage || 0}</div>
+          <div>库存：<span>{userInfo?.accounts?.inventory || 0}</span></div>
+          <div>存储箱库存：<span>{userInfo?.accounts?.storage || 0}</span></div>
         </div>
         <span className="divider"></span>
         <div>
           存储箱个数：{userInfo?.accounts?.storageInventory || 0}
-          <div>
+          <div style={{marginTop: 8}}>
             <div className="move-button" onClick={pageToMove}>存/取</div>
           </div>
         </div>
