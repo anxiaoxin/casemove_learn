@@ -80,6 +80,11 @@ router.get('/getBaseInfo', async function(req, res, next) {
     const info = await steamUser.getBaseInfo();
     sendSuccess(res, info);
   } catch (error) {
+
+    if (error === 'no session') {
+      sendFailed(res, 2, '');
+      return;
+    }
     sendFailed(res, 1, '请求失败，请重试');
   }
 })
@@ -95,6 +100,11 @@ router.post('/refreshInventory', async function(req, res, next) {
     const data = await steamUser.refreshInventory();
     sendSuccess(res, data);
   } catch(error) {
+
+    if (error === 'no session') {
+      sendFailed(res, 2, '');
+      return;
+    }
     sendFailed(res, 1, '请求失败，请重试');
   }
 })
@@ -117,6 +127,11 @@ router.get('/getCasketContents', async function(req, res, next) {
     const data = await steamUser.getCasketContents(id);
     sendSuccess(res, data);
   } catch (error) {
+
+    if (error === 'no session') {
+      sendFailed(res, 2, '');
+      return;
+    }
     sendFailed(res, 1, '请求失败，请重试');
   }
 

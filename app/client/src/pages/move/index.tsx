@@ -1,4 +1,4 @@
-import { useModel } from "umi";
+import { history, useModel } from "umi";
 import { createCSGOImage } from "../../../api/createCSGOImage";
 import EditImage from '../../../assets/images/edit.png';
 import { useEffect, useState } from "react";
@@ -12,6 +12,7 @@ import './index.less';
 import useMoveDialog from "@/components/MoveDialog";
 import useRenameDialog from "@/components/RenameDialog";
 import PageHeader from "@/components/HeadBack";
+import { PathName } from "@/constants";
 
 interface MoveHeaderProp {
     onSelected: (items: string[]) => void,

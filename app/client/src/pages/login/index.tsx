@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Form, Button, Input } from "antd-mobile";
+import { Form, Button, Input, Modal } from "antd-mobile";
 import SteamLogo from '../../../assets/images/logo_steam.svg';
 import Loading from '@/components/loading/loding';
 import { history, useModel } from 'umi';
@@ -24,6 +24,27 @@ const Login = () => {
     if (name) {
       form.setFieldValue('accountName', name);
     }
+
+    // if (!Cookies.get('noprompt')) {
+      Modal.confirm({
+        title: '声明',
+        content: <div>
+          1. 本站不会存储用户steam相关的任何信息，包括但不限于steam登录密码、令牌、steam用户信息、库存信息。
+          <div></div>
+          2. 本站不会分析用户的任何数据。
+          <div></div>
+          3. 非本人操作，不要使用令牌确认任何登录、交易操作。
+          <div></div>
+          4. 请在安全的网络环境中使用本站。
+        </div>,
+        cancelText: '不在提示',
+        confirmText: '确定',
+        onCancel: () => {
+          Cookies.set('noprompt', '1');
+        }
+      })
+    // }
+
   }, [])
 
   const onFinish = (values:any) => {

@@ -31,6 +31,13 @@ class SteamCtrl {
       this.bindEvent();
     }
 
+    gcCanUse() {
+      if (this.csgo) {
+        return this.csgo.haveGCSession;
+      }
+      return false;
+    }
+
     bindEvent() {
         this.sUser.once('loggedOn', () => {
             console.log('has logged on');
@@ -317,6 +324,12 @@ class SteamCtrl {
     getBaseInfo() {
       return new Promise((res, rej) => {
         try {
+
+          if (!this.csgo.haveGCSession) {
+            rej('no session');
+            return;
+          }
+
           this.fetchItemClass
             .convertInventory(this.csgo.inventory)
             .then((returnValue) => {
@@ -347,6 +360,11 @@ class SteamCtrl {
 
     async getCasketContents(casketID) {
       return new Promise((res, rej) => {
+        if (!this.csgo.haveGCSession) {
+          rej('no session');
+          return;
+        }
+
         this.csgo.getCasketContents(casketID, async (err, items) => {
           this.fetchItemClass.convertStorageData(items).then((returnValue) => {
             this.tradeUpClass.getTradeUp(returnValue).then((newReturnValue) => {
@@ -361,9 +379,7 @@ class SteamCtrl {
     // Remove items from storage unit
     moveOut(casketId, itemId, fastMode = false) {
       console.log('haveGCsession', this.csgo.haveGCSession);
-      if (!this.csgo.haveGCSession) {
 
-      }
       return new Promise((res, rej) => {
         // 操作的时候将监听事件移除
 

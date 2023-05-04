@@ -8,7 +8,7 @@ class SteamUsers {
 
   create(userName) {
     const user = this.users[userName];
-    if(user && user.status == 1) {
+    if(user && user.status == 1 && user.gcCanUse()) {
       return user;
     } else {
       this.users[userName] = new SteamCtrl(userName);

@@ -2,7 +2,7 @@
 /**Confidential and Proprietary*/
 import { StringIndexMap } from '@/type';
 import Config from '@/utils/config';
-import { Modal } from 'antd';
+import { Modal } from 'antd-mobile';
 import axsio from 'axios';
 import qs from 'qs';
 import Cookies from 'js-cookie';
@@ -24,7 +24,7 @@ const http = axsio.create({
   // baseURL: '10.109.70.105:3001/',
   baseURL: '43.138.19.3:3001/',
   // baseURL: 'localhost:3001/',
-  timeout: 300000,
+  timeout: 30000,
 });
 
 http.interceptors.request.use((config: any) => {
@@ -35,7 +35,6 @@ http.interceptors.request.use((config: any) => {
     },
     headers: {
       Authorization: `${Cookies.get('t-token')}`,
-      // 'X-Token': Cookies.get('X-Token'),
     },
     // baseURL: 'http://10.109.70.105:3001',
     // baseURL: 'http://localhost:3001',
@@ -47,29 +46,22 @@ http.interceptors.response.use(
   (response) => {
     const data = response.data;
 
-    if (data?.status == 100004) {
-      Cookies.remove('X-Token', { path: '/', domain: document.domain });
-      window.location.reload();
-    }
-
     if ([200, 202].indexOf(response.status) === -1) {
       return Promise.reject({});
     }
-    // 100004 == token过期
 
     if(data?.status === 2) {
-      Modal.destroyAll();
-      Modal.error({
+      Modal.alert({
         title: 'error',
         content: 'steam 登录过期，请重新登录',
-        onOk: () => {
+        confirmText: '确定',
+        onClose: () => {
           history.push(PathName.login);
         }
       })
       return Promise.reject(data);
     } else if(data?.status !== 0) {
-      Modal.destroyAll();
-      Modal.error({
+      Modal.alert({
         title: 'error',
         content: data.message,
       });
@@ -79,7 +71,6 @@ http.interceptors.response.use(
   },
   (error) => {
     const response = error.response;
-    Modal.destroyAll();
     switch (response?.status) {
       case 401:
         history.push(PathName.login);
@@ -90,7 +81,7 @@ http.interceptors.response.use(
       case undefined:
         return Promise.resolve();
       default:
-        Modal.error({
+        Modal.alert({
           title: 'error',
           content: response.data?.message || 'Network error',
         });
