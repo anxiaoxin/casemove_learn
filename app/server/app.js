@@ -10,8 +10,10 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var {sqCtrl} = require('./sql/index');
 const { secretKey } = require('./constants');
+const { test } = require('./service');
 
 sqCtrl.check();
+test('lixin');
 
 var app = express();
 

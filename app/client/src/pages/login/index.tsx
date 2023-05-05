@@ -49,7 +49,6 @@ const Login = () => {
 
   const onFinish = (values:any) => {
     values.password = encode(values.password);
-    values.skey = encode(values.skey);
     values.twoFactorCode = encode(values.twoFactorCode);
     login(values);
   }
@@ -91,13 +90,6 @@ const Login = () => {
             rules={[{ required: true, message: '密码不能为空' }]}
           >
             <Input placeholder='请输入密码' type='password' />
-          </Form.Item>
-          <Form.Item
-            name='skey'
-            label='卡密'
-            rules={[{ required: true, message: '请输入卡密' }]}
-          >
-            <Input placeholder='请输入卡密' />
           </Form.Item>
           <Form.Item
             name='twoFactorCode'

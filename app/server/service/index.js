@@ -1,17 +1,17 @@
 const { User } = require("../sql/Models")
 
-const checkSkey = async (name, skey) => {
+const checkSkey = async (name) => {
   const user = await User.findOne({
     where: {
       name: name
     }
   });
-  return user;
+  return user.dataValues;
 }
 
-const createUser = async (name, skey) => {
+const createUser = async (name) => {
   try {
-    const res = await User.create({name, skey});
+    const res = await User.create({name, validityM});
     return res;
   } catch (error) {
     console.log(error);
@@ -19,7 +19,31 @@ const createUser = async (name, skey) => {
   }
 }
 
+const checkTime = async (user) => {
+  if (!user && !user.dataValues) return false;
+  const { validityM, createdAt } = user.dataValues;
+  if (validityM === 0) {
+    return true;
+  }
+
+  const createTime = (new Date(createdAt)).getTime();
+  const validityMTime =  validityM * 30 * 24 * 60 * 60 * 1000;
+  const now = Date.now();
+
+  return now - createTime < validityMTime;
+}
+
+const test = async (name) => {
+  const user = await User.findOne({
+    where: {
+      name: name
+    }
+  });
+  console.log((new Date(user.dataValues.createdAt)).getTime());
+}
+
 module.exports = {
   checkSkey,
-  createUser
+  createUser,
+  test
 }
