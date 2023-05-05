@@ -4,7 +4,7 @@ const { sendSuccess, sendFailed, getRandomCode, decode } = require('../utils/uti
 const { getPrices } = require('../global/price');
 const { secretKey } = require('../constants');
 const jwt = require('jsonwebtoken');
-const { checkSkey, createUser } = require('../service');
+const { checkSkey, createUser, getUsers } = require('../service');
 var router = express.Router();
 
 /* GET home page. */
@@ -190,6 +190,22 @@ router.post('/rename', async function(req, res, next) {
       sendFailed(res, 2, '');
       return;
     }
+    sendSuccess(res, false);
+  }
+})
+
+router.get('/getUsers', async function(req, res, next) {
+  const admin = await checkSkey(req.auth.username);
+
+  if (!admin || !admin.isAdmin) {
+    sendFailed(res, 1, '无操作权限');
+    return;
+  }
+
+  try {
+    const data = await getUsers();
+    sendSuccess(res, data);
+  } catch (error) {
     sendSuccess(res, false);
   }
 })

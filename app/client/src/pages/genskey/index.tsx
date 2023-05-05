@@ -2,40 +2,48 @@ import { Button, Input } from "antd-mobile";
 import { useEffect, useState } from "react";
 import './index.less';
 import Loading from "@/components/loading/loding";
-import { GetSkey } from "@/request";
+import { GetSkey, GetUsers } from "@/request";
+import useAddUserDialog from "@/components/AddUserDialog";
+
+const UserItem = (props: {info: any}) => {
+    return <>
+        <div>
+            <span>name</span>
+            <span>到期时间</span>
+        </div>
+    </>
+}
 
 const GenSkey = () => {
-    const [loading, setLoading] = useState(false);
     const [name, setName] = useState('');
-    const [key, setKey] = useState('');
+    const { loading, show } = useAddUserDialog();
+    const [users, setUsers] = useState<any[]>([1,1,1,1,1,1,1]);
+
     const onChange = (value: string) => {
         setName(value);
     }
 
-     const getSkey = () => {
-        if (!name) return;
-        GetSkey({name}).then((res) => {
-          if (res.status === 0) {
-            setKey(res.data);
-          }
-        })
+    const addUser = () => {
+        show();
     }
 
-    return <>
-        <div className="genkey-container">
-            <div>
-                <div>
-                    <Input onChange={onChange} style={{border: '1px solid #cac8c8', borderRadius: '4%', padding: 4, '--color': 'white'}} placeholder="请输入steam用户名" value={name}></Input>
-                </div>
-                <div className="button" onClick={getSkey}>生成</div>
-            </div>
-            {
-                key && <div className="skey">
-                <div id="skey" >{key}</div>
-                <div  className="copy" >长按文本复制</div>
-            </div>
-            }
+    useEffect(() => {
+        GetUsers({}).then(data => {
 
+        })
+    }, [])
+
+    return <>
+        <div className="add-user">
+            <div className="add-user-operate">
+                <span className="button" onClick={addUser}>添加用户</span>
+                <span>共：人</span>
+            </div>
+            <div className="user-list">
+                {users.map(item => {
+                    return <UserItem info={item}></UserItem>
+                })}
+            </div>
         </div>
         {loading && <Loading></Loading>}
     </>

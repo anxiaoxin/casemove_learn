@@ -1,33 +1,33 @@
-.genkey-container {
+.add-user {
     height: 100%;
-    background-color: rgb(32, 34, 35);
-    padding-top: 30%;
-    margin: 0 auto;
-    text-align: center;
 
-    & > div:first-child {
-        & > div {
-            display: inline-block;
-        }
+    & > .add-user-operate {
+        height: 100px;
+        display: flex;
+        padding: 0 40px;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #ebe9e9;
         & > .button {
             font-size: 18px;
-            margin-left: 40px;
             padding: 8px 20px;
             color: white;
             background-color: rgb(209, 209, 32);
         }
     }
 
-    & > .skey {
-        margin-top: 60px;
-        color: white;
-        font-size: 24px;
+    & > .user-list {
+        height: calc(100% - 100px);
+        overflow-y: scroll;
+        padding: 10px 20px;
+        box-sizing: border-box;
+
         & > div {
-            display: inline-block;
-        }
-        & > .copy {
-            margin-left: 40px;
+            display: flex;
+            padding: 6px 0;
+            & > span {
+                flex: 1;
+            }
         }
     }
-
 }

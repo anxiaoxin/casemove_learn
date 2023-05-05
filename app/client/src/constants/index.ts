@@ -6,5 +6,5 @@ export const PathName = {
   login: '/login',
   home: '/home',
   move: '/move',
-  skey: 'genskey'
+  skey: '/genskey'
 }

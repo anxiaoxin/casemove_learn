@@ -33,6 +33,15 @@ const checkTime = async (user) => {
   return now - createTime < validityMTime;
 }
 
+const getUsers = async () => {
+  try {
+    const res = await User.findAll();
+    return res;
+  } catch (error) {
+    return []; 
+  }
+}
+
 const test = async (name) => {
   const user = await User.findOne({
     where: {
@@ -45,5 +54,6 @@ const test = async (name) => {
 module.exports = {
   checkSkey,
   createUser,
+  getUsers,
   test
 }

@@ -7,6 +7,7 @@ import {
   getBaseInfoUrl,
   getCasketContentsUrl,
   getPriceUrl,
+  getUsersUrl,
   loginUrl, moveInUrl, moveOutUrl, refreshInventoryUrl, renameStorageUnitUrl,
 } from '@/constants/urls';
 import ContentsJSON from './getCasketContents.json'
@@ -51,6 +52,9 @@ export const MultipleRequest = (request: (params: any) => Promise<any>, paramLis
 export const UserLogin = async (params: any): Promise<any> =>
   // Promise.resolve(UserInfo);
   Post(loginUrl, params);
+
+export const GetUsers =async (params: any): Promise<any> =>
+  Get(getUsersUrl, params);
 
 export const GetBaseInfo =async (params: any): Promise<any> =>
   Get(getBaseInfoUrl, params);

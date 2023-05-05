@@ -9,3 +9,4 @@ export const moveOutUrl = '/moveOut';
 export const getBaseInfoUrl = '/getBaseInfo';
 export const genSkeyUrl = '/genSkey';
 export const renameStorageUnitUrl = '/rename';
+export const getUsersUrl = '/getUsers';
