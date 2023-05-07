@@ -22,8 +22,8 @@ const IconAuth = {
 
 const http = axsio.create({
   // baseURL: '10.109.70.105:3001/',
-  // baseURL: '43.138.19.3:3001/',
-  baseURL: 'localhost:3001/',
+  baseURL: '43.138.19.3:3001/',
+  // baseURL: 'localhost:3001/',
   timeout: 30000,
 });
 
@@ -36,9 +36,9 @@ http.interceptors.request.use((config: any) => {
     headers: {
       Authorization: `${Cookies.get('t-token')}`,
     },
-    baseURL: 'http://10.109.70.105:3001',
+    // baseURL: 'http://10.109.70.105:3001',
     // baseURL: 'http://localhost:3001',
-    // baseURL: 'http://43.138.19.3:3001/',
+    baseURL: 'http://43.138.19.3:3001/',
   };
 });
 

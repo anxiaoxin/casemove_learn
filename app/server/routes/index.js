@@ -4,7 +4,7 @@ const { sendSuccess, sendFailed, getRandomCode, decode } = require('../utils/uti
 const { getPrices } = require('../global/price');
 const { secretKey } = require('../constants');
 const jwt = require('jsonwebtoken');
-const { checkSkey, createUser, getUsers } = require('../service');
+const { checkSkey, createUser, getUsers, updateUser, deleteUser } = require('../service');
 var router = express.Router();
 
 /* GET home page. */
@@ -16,10 +16,16 @@ router.post('/login', async function(req, res, next){
   const { accountName, password, twoFactorCode } = req.body;
   const passwordD = decode(password);
   const twoFactorCodeD = decode(twoFactorCode);
-  const user = await checkSkey(accountName);
-  if (user === null) {
-    sendFailed(res, 1, '用户不存在');
-    return;
+  let user;
+  try {
+    user = await checkSkey(accountName);
+    if (user === null) {
+      sendFailed(res, 1, '用户不存在');
+      return;
+    }
+    
+  } catch (error) {
+    console.log(error);
   }
 
   const token = 'Bearer ' + jwt.sign(
@@ -210,7 +216,7 @@ router.get('/getUsers', async function(req, res, next) {
   }
 })
 
-router.get('/addUser', async function(req, res, next) {
+router.post('/addUser', async function(req, res, next) {
   const admin = await checkSkey(req.auth.username);
 
   if (!admin || !admin.isAdmin) {
@@ -218,16 +224,16 @@ router.get('/addUser', async function(req, res, next) {
     return;
   }
 
-  const { name, validityM } = req.query;
+  const { name, validityM } = req.body;
   const user = await checkSkey(name);
   if (user) {
     sendFailed(res, 1, '用户已存在');
     return;
   }
-  const skey = getRandomCode(16);
+
   const result = await createUser(name, validityM);
   if (result) {
-    sendSuccess(res, skey);
+    sendSuccess(res, true);
     return;
   } else {
     sendFailed(res, 1, '创建失败');
@@ -242,7 +248,31 @@ router.post('/updateUser', async function(req, res, next) {
     return;
   }
 
-
+  const { name, validityM } = req.body;
+  const result = await updateUser(name, validityM);
+  if (result) {
+    sendSuccess(res, true);
+    return;
+  } else {
+    sendFailed(res, 1, '修改失败');
+  }
 })
 
+router.post('/deleteUser', async function(req, res, next) {
+  const admin = await checkSkey(req.auth.username);
+
+  if (!admin || !admin.isAdmin) {
+    sendFailed(res, 1, '无操作权限');
+    return;
+  }
+
+  const { id } = req.body;
+  const result = await deleteUser(id);
+  if (result) {
+    sendSuccess(res, true);
+    return;
+  } else {
+    sendFailed(res, 1, '删除失败');
+  }
+})
 module.exports = router;

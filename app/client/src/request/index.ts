@@ -3,12 +3,14 @@
 export * from './base';
 import { Delete, Get, Post, Put } from './base';
 import {
+  addUsersUrl,
+  deleteUsersUrl,
   genSkeyUrl,
   getBaseInfoUrl,
   getCasketContentsUrl,
   getPriceUrl,
   getUsersUrl,
-  loginUrl, moveInUrl, moveOutUrl, refreshInventoryUrl, renameStorageUnitUrl,
+  loginUrl, moveInUrl, moveOutUrl, refreshInventoryUrl, renameStorageUnitUrl, updateUsersUrl,
 } from '@/constants/urls';
 import ContentsJSON from './getCasketContents.json'
 import UserInfo from '../pages/login/res.json';
@@ -55,6 +57,15 @@ export const UserLogin = async (params: any): Promise<any> =>
 
 export const GetUsers =async (params: any): Promise<any> =>
   Get(getUsersUrl, params);
+
+export const AddUser = async (params: any): Promise<any> =>
+  Post(addUsersUrl, params);
+
+export const UpdateUser = async (params: any): Promise<any> =>
+  Post(updateUsersUrl, params);
+
+export const DeleteUser = async (params: any): Promise<any> =>
+  Post(deleteUsersUrl, params);
 
 export const GetBaseInfo =async (params: any): Promise<any> =>
   Get(getBaseInfoUrl, params);

@@ -25,7 +25,7 @@ const Login = () => {
       form.setFieldValue('accountName', name);
     }
 
-    // if (!Cookies.get('noprompt')) {
+    if (!Cookies.get('noprompt')) {
       Modal.confirm({
         title: '声明',
         content: <div>
@@ -43,7 +43,7 @@ const Login = () => {
           Cookies.set('noprompt', '1');
         }
       })
-    // }
+    }
 
   }, [])
 

@@ -10,3 +10,6 @@ export const getBaseInfoUrl = '/getBaseInfo';
 export const genSkeyUrl = '/genSkey';
 export const renameStorageUnitUrl = '/rename';
 export const getUsersUrl = '/getUsers';
+export const addUsersUrl = '/addUser';
+export const updateUsersUrl = '/updateUser';
+export const deleteUsersUrl = '/deleteUser';

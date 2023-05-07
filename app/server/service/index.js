@@ -6,12 +6,44 @@ const checkSkey = async (name) => {
       name: name
     }
   });
+  if (!user) return null;
   return user.dataValues;
 }
 
-const createUser = async (name) => {
+const createUser = async (name, validityM) => {
   try {
     const res = await User.create({name, validityM});
+    return res;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+const deleteUser = async (id) => {
+  try {
+    const res = await User.destroy({where: {id}});
+    return res;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+const updateUser = async (name, validityM) => {
+  try{
+    const user = await User.findOne({
+      where: {
+        name
+      }
+    })
+    if (!user) return false;
+
+    const res = await User.update({name, validityM}, {
+      where: {
+        name
+      }
+    })
     return res;
   } catch (error) {
     console.log(error);
@@ -54,6 +86,8 @@ const test = async (name) => {
 module.exports = {
   checkSkey,
   createUser,
+  updateUser,
   getUsers,
+  deleteUser,
   test
 }

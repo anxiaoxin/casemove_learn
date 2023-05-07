@@ -13,7 +13,6 @@ const { secretKey } = require('./constants');
 const { test } = require('./service');
 
 sqCtrl.check();
-test('lixin');
 
 var app = express();
 

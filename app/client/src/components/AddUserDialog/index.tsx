@@ -1,8 +1,8 @@
-import { MoveIn, MoveOut, MultipleRequest, RenameStorageUnit } from "@/request";
+import { AddUser, MoveIn, MoveOut, MultipleRequest, RenameStorageUnit } from "@/request";
 import { Dialog, Input, Modal } from "antd-mobile";
 import { useEffect, useRef, useState } from "react";
 import './index.less';
-import { values } from "lodash";
+import eventBus from "@/utils/eventBus";
 
 interface MoveDialogProps {
   onNChange: (value: string) => void,
@@ -42,11 +42,20 @@ const useAddUserDialog = () => {
   const id = useRef('');
   const defaultName = useRef('');
 
+  const addUser = (name: string, m: string) => {
+    setLoading(true)
+    AddUser({name: name, validityM: +m}).then(res => {
+      eventBus.emit('refreshUser');
+    }).finally(() => {
+      setLoading(false);
+    })
+  }
+
   const show = (userInfo?: any) => {
     Dialog.confirm({
       content: <RenameContent onNChange={(value) => name.current = value} onMChange={(value) => m.current = value} ></RenameContent>,
       onConfirm: () => {
-        console.log(name, m);
+        addUser(name.current, m.current);
       }
     })
   }
