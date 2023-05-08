@@ -49,6 +49,8 @@ router.post('/login', async function(req, res, next){
       token
     })
     return;
+  } else {
+    SteamUsers.deleteUser(req.body.accountName);
   }
 
   const steamUser = SteamUsers.create(req.body.accountName);

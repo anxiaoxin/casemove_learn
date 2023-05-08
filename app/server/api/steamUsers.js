@@ -18,7 +18,7 @@ class SteamUsers {
 
   canUse(userName) {
     const user = this.users[userName];
-    if (user && (user.status == 1)) {
+    if (user && (user.status == 1) && user.csgo && user.csgo.haveGCSession) {
       return true;
     } else {
       return false;
@@ -36,6 +36,12 @@ class SteamUsers {
     }
 
     return user;
+  }
+
+  deleteUser(userName) {
+    if (user[userName]) {
+      delete user[userName];
+    }
   }
 }
 
