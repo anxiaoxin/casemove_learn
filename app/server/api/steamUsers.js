@@ -39,8 +39,8 @@ class SteamUsers {
   }
 
   deleteUser(userName) {
-    if (user[userName]) {
-      delete user[userName];
+    if (this.users[userName]) {
+      delete this.users[userName];
     }
   }
 }
