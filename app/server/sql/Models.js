@@ -1,10 +1,10 @@
 const { Sequelize, Model, DataTypes } = require('sequelize');
 
 const sequelize = new Sequelize('casemove', 'root', 'Li@980828298', {
-  host: 'bj-cynosdbmysql-grp-flnudbrs.sql.tencentcdb.com',
-  port: '22373',
-  // host: '10.0.8.15',
-  // port: '3306',
+  // host: 'bj-cynosdbmysql-grp-flnudbrs.sql.tencentcdb.com',
+  // port: '22373',
+  host: '10.0.8.15',
+  port: '3306',
   dialect: 'mysql'
 });
 

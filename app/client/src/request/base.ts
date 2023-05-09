@@ -37,8 +37,8 @@ http.interceptors.request.use((config: any) => {
       Authorization: `${Cookies.get('t-token')}`,
     },
     // baseURL: 'http://10.109.70.105:3001',
-    baseURL: 'http://localhost:3001',
-    // baseURL: 'http://43.138.19.3:3001/',
+    // baseURL: 'http://localhost:3001',
+    baseURL: 'http://43.138.19.3:3001/',
   };
 });
 
