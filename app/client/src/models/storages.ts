@@ -1,7 +1,6 @@
 import { GetCasketContents } from "@/request";
 import { useEffect, useState } from "react";
 import { useModel } from "umi";
-import Haha from './haha.json';
 
 const getCaskets = (inventory: any)=> {
     return inventory.filter(function (row: any) {

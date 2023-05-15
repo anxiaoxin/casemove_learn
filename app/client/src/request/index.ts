@@ -22,8 +22,11 @@ export const MultipleRequest = (request: (params: any) => Promise<any>, paramLis
   let finished  = 0;
   let succedNum = 0;
   let failedNum = 0
+  let stop = false;
+
   const req = () => {
     console.log('param', paramList[currentIndex], currentIndex);
+    if (stop) return;
     request(paramList[currentIndex]).then((data) => {
       succedNum += 1;
       if (!data.data) {
@@ -49,6 +52,13 @@ export const MultipleRequest = (request: (params: any) => Promise<any>, paramLis
     req();
     currentIndex += 1;
   }
+
+  const cancel = () => {
+    stop = true;
+  }
+
+  return cancel;
+
 }
 
 export const UserLogin = async (params: any): Promise<any> =>

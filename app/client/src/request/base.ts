@@ -8,6 +8,7 @@ import qs from 'qs';
 import Cookies from 'js-cookie';
 import { history } from 'umi';
 import { PathName } from '@/constants';
+import eventBus from '@/utils/eventBus';
 
 interface ResponseType {
   message: string;
@@ -56,7 +57,7 @@ http.interceptors.response.use(
         content: 'steam 登录过期，请重新登录',
         confirmText: '确定',
         onClose: () => {
-          history.push(PathName.login);
+          eventBus.emit('resetLogin');
         }
       })
       return Promise.reject(data);

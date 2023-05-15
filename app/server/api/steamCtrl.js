@@ -200,42 +200,14 @@ class SteamCtrl {
     csgoStart(displayName) {
       const gameCoordinate = async (resolve) => {
         this.csgo.once('connectedToGC', () => {
+          console.log('Connected to GC!!');
           if (resolve) {
             resolve('GC');
           }
           console.log('Connected to GC!');
           if (this.csgo.haveGCSession) {
-            console.log('Have Session!');
-
-             this.steamID = this.sUser.logOnResult.client_supplied_steamid;
-            // this.fetchItemClass
-            //   .convertInventory(this.csgo.inventory)
-            //   .then((returnValue) => {
-            //     this.tradeUpClass
-            //       .getTradeUp(returnValue)
-            //       .then((newReturnValue) => {
-            //         let walletToSend = this.sUser.wallet;
-            //         if (walletToSend) {
-            //           walletToSend.currency =
-            //             currencyCodes[walletToSend.currency];
-            //         }
-
-            //         const returnPackage = {
-            //           steamID: this.sUser.logOnResult.client_supplied_steamid,
-            //           displayName,
-            //           haveGCSession: this.csgo.haveGCSession,
-            //           csgoInventory: newReturnValue,
-            //           walletToSend: walletToSend,
-            //         };
-
-            //         this.logonRes.res(returnPackage)
-            //         this.startEvents(csgo, user);
-            //       });
-            //   }).catch(e => {
-            //     this.logonRes.rej();
-            //   });
-
-              this.logonRes.res();
+            this.steamID = this.sUser.logOnResult.client_supplied_steamid;
+            this.logonRes.res();
             }
         });
       }
@@ -251,15 +223,9 @@ class SteamCtrl {
 
       let GCResponse = new Promise((resolve) => {
         this.sUser.once('playingState', function (blocked, _playingApp) {
-          if (!blocked) {
-            startGameCoordinator();
-            gameCoordinate(resolve);
-          } else {
-            // ClassLoginResponse.setEmptyPackage();
-            // ClassLoginResponse.setResponseStatus('playingElsewhere');
-            // sendLoginReply(event);
-            resolve('error');
-          }
+          console.log('blocked', blocked);
+          startGameCoordinator();
+          gameCoordinate(resolve);
         });
       });
 
@@ -279,6 +245,7 @@ class SteamCtrl {
 
       // Race the two
       Promise.race([timeout, GCResponse, error]).then((value) => {
+        console.log('value', value);
         if (value == 'error') {
           // Force login
           // ipcMain.on('forceLogin', async () => {

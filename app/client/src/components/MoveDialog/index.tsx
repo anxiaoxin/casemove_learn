@@ -1,6 +1,6 @@
 import { MoveIn, MoveOut, MultipleRequest } from "@/request";
 import { Dialog } from "antd-mobile";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import './index.less';
 
 interface MoveDialogProps {
@@ -14,7 +14,7 @@ const MoveDialog = (props: MoveDialogProps) => {
   const [ count, setCount ] = useState<number>(-1);
   const [res, setRes] = useState({succedNum: 0, failedNum: 0});
   const [flipClass, setFlipClass] = useState<string>('');
-  console.log(idMap);
+  const cancel = useRef<any>();
 
   useEffect(() => {
     const params:any = [];
@@ -25,13 +25,18 @@ const MoveDialog = (props: MoveDialogProps) => {
     console.log('params', params);
     setCount(params.length);
 
-    MultipleRequest(moveout ? MoveOut : MoveIn, params, (res: any, finish: boolean ) => {
+    cancel.current = MultipleRequest(moveout ? MoveOut : MoveIn, params, (res: any, finish: boolean ) => {
       setRes(res);
       if (finish) {
         onEnd();
       }
     })
   }, [])
+
+  const cancelReq = () => {
+    cancel.current && cancel.current();
+    onEnd();
+  }
 
   useEffect(() => {
     setFlipClass('flip');
@@ -49,6 +54,7 @@ const MoveDialog = (props: MoveDialogProps) => {
         {res.failedNum ? <div style={{marginTop: 10, fontSize: 12}}>失败个数：<span style={{color: 'red'}}>{res.failedNum}</span></div> : ''}
         <div style={{marginTop: 10}}>移动中，请耐心等待。</div>
       </div>
+      <div className="move-cancel"><span onClick={cancelReq}>取消</span></div>
     </div>
   </>
 }

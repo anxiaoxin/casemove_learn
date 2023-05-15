@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { GetBaseInfo, GetCasketContents, RefresInventory, UserLogin } from "../../src/request";
 import combineInventory from "../../api/filters/inventoryFunctions";
 import { getAccounts } from "../../api";
@@ -6,6 +6,7 @@ import UserInfo from '../pages/login/res.json';
 import Cookies from "js-cookie";
 import { history } from "umi";
 import { PathName } from "@/constants";
+import eventBus from "@/utils/eventBus";
 // import prices from '../../../api/prices';
 
 export const combineData = async (inventory: any) => {
@@ -81,6 +82,16 @@ const useUser = () => {
 
     }).finally(() => setLoading(false));
   }
+
+  useEffect(() => {
+    eventBus.on('resetLogin', () => {
+      setHasLogin(false);
+      setUserInfo(undefined);
+      history.push(PathName.login);
+    })
+  }, [])
+
+
 
   return {haslogin, userInfo, login, loading, refresh, getUserInfo};
 }
